@@ -23,5 +23,8 @@
   "bugs": {
     "url": "https://github.com/meezwhite/OpMapper/issues"
   },
-  "homepage": "https://github.com/meezwhite/OpMapper"
+  "homepage": "https://github.com/meezwhite/OpMapper",
+  "devDependencies": {
+    "alpinejs": "^3.12.2"
+  }
 }
