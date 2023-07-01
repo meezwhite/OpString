@@ -1,3 +1,5 @@
+[x-cloak] { display: none !important; }
+
 #actions_wrapper {
     display: flex;
 }
