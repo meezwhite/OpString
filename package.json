@@ -1,0 +1,27 @@
+{
+  "name": "opmapper",
+  "version": "0.1.0",
+  "description": "OpMapper is a lightweight JavaScript library for encoding, decoding and executing operations defined by UTF-8 character sequences.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "javascript",
+    "operations",
+    "mapper",
+    "encode",
+    "decode",
+    "utf-8"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/meezwhite/OpMapper.git"
+  },
+  "author": "meezwhite",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/meezwhite/OpMapper/issues"
+  },
+  "homepage": "https://github.com/meezwhite/OpMapper"
+}
