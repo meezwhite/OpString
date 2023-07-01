@@ -58,7 +58,7 @@
     <script type="module">
         import OpMapper from './index.js';
 
-        const opmapper = new OpMapper({
+        const opMapper = new OpMapper({
             'A': ([x, y, d]) => {
                 console.log(`circle(${x}, ${y}, ${d})`);
             },
@@ -70,11 +70,11 @@
             'b': 20,
             'c': 55,
         });
-        console.debug(opmapper);
+        console.debug(opMapper);
 
         const input = 'AaabBaacc';
-        opmapper.decode(input);
-        opmapper.execute();
+        opMapper.decode(input);
+        opMapper.execute();
 
         const operationsTable = document.getElementById('operations_table');
         const mappingsTable = document.getElementById('mappings_table');
