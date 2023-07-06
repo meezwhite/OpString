@@ -121,10 +121,10 @@ export default class OpMapper {
                 const isString = typeof args[0] === 'string';
                 const isNumber = typeof args[0] === 'number';
                 if (! isString && ! isNumber) {
-                    throw new Error(`[OpMapper] Unable to ${method} with symbol "${symbol}". A symbol must be of type string or number.`);
+                    throw new Error(`[OpMapper] Unable to ${method} with symbol "${args[0]}". A symbol must be of type string or number.`);
                 }
                 if (isString && args[0].length !== 1) {
-                    throw new Error(`[OpMapper] Unable to ${method} with symbol "${symbol}". A symbol of type string must be a single character.`);
+                    throw new Error(`[OpMapper] Unable to ${method} with symbol "${args[0]}". A symbol of type string must be a single character.`);
                 } else if (
                     isNumber
                     && (
@@ -133,7 +133,7 @@ export default class OpMapper {
                         || args[0] > this.#maxSymbolCode
                     )
                 ) {
-                    throw new Error(`[OpMapper] Unable to ${method} with symbol "${symbol}". A symbol of type number must be an integer between ${this.#minSymbolCode} and ${this.#maxSymbolCode}.`);
+                    throw new Error(`[OpMapper] Unable to ${method} with symbol "${args[0]}". Given the current configuration a symbol of type number must be an integer between ${this.#minSymbolCode} and ${this.#maxSymbolCode}.`);
                 }
                 break;
 
