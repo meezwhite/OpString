@@ -220,7 +220,7 @@ export default class OpMapper {
                 }
                 if (
                     ! this.ignoreWarnings
-                    && this.#maxOperationsLength
+                    && this.#maxOperationsLength !== undefined
                     && args[0].length > this.#maxOperationsLength
                 ) {
                     console.warn(`[OpMapper] The provided operations sequence exceeds the configured 'maxOperationsLength' of ${this.#maxOperationsLength} characters.`);
