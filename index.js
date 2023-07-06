@@ -146,7 +146,7 @@ export default class OpMapper {
                     && this.#maxOperationsLength
                     && args[0].length > this.#maxOperationsLength
                 ) {
-                    console.warn(`[OpMapper] The provided operations sequence exceeds the maxOperationsLength guideline of ${this.#maxOperationsLength} characters.`);
+                    console.warn(`[OpMapper] Given the current configuration the provided operations sequence exceeds the maxOperationsLength guideline of ${this.#maxOperationsLength} characters.`);
                 }
                 break;
             
