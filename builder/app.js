@@ -1,5 +1,6 @@
 import Alpine from './../node_modules/alpinejs/dist/module.esm.js';
 import OpMapper from './../index.js';
+// import { operationsStore, valuesStore } from './OpMapperStore.js';
 
 window.Alpine = Alpine;
 window.OpMapper = OpMapper;
