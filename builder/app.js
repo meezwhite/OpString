@@ -27,8 +27,6 @@ document.addEventListener('alpine:init', () => {
                 operationsStore,
                 valuesStore,
                 ignoreWarnings: false,
-                minSymbolCode: 30,
-                maxSymbolCode: 9999,
                 maxOperationsLength: 2000,
             });
             

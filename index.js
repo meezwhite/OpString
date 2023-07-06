@@ -7,37 +7,46 @@
 export default class OpMapper {
     version = '0.1.0';
 
-    // operationsStore;
-    // valuesStore;
-    // ignoreWarnings;
+    operationsStore = {};
+    valuesStore = {};
+    ignoreWarnings = false;
 
-    #minSymbolCode;
-    #maxSymbolCode;
+    #minSymbolCode = 0;
+    #maxSymbolCode = 65535;
     #maxOperationsLength;
 
     /**
      * Creates an instance of OpMapper.
      * 
-     * @param {Object} [config] The config object to configure OpMapper features.
-     * @param {Object} config.operationsStore The initial object storing operation mappings.
-     * @param {Object} config.valuesStore The initial object storing value mappings.
+     * @param {Object} [config] Config object to configure OpMapper features.
+     * @param {Object} [config.operationsStore] Initial object storing operation mappings. (default: {})
+     * @param {Object} [config.valuesStore] Initial object storing value mappings. (default: {})
      * @param {Boolean} [config.ignoreWarnings] Specifies whether warnings should be ignored. (default: false)
-     * @param {Number} [config.minSymbolCode] Specifies the minimum allowed UTF-16 code unit of a character.
-     *     If defined, it must be a positive integer and smaller than `config.maxSymbolCode`. (default: 0)
-     * @param {Number} [config.maxSymbolCode] Specifies the maximum allowed UTF-16 code unit of a character.
-     *     If defined, it must be a positive integer and bigger than `config.minSymbolCode`. (default: 65535)
      * @param {Number} [config.maxOperationsLength] Specifies a maximum operations sequence length guideline.
      *     If defined, it must be a positive safe integer. (default: undefined)
      */
-    constructor(config = {}) {
-        console.debug('constructor arguments:', arguments);
+    constructor(config) {
         this.#validateArguments('constructor', arguments);
-        this.operationsStore = config.operationsStore;
-        this.valuesStore = config.valuesStore;
-        this.ignoreWarnings = config.ignoreWarnings ?? false;
-        this.#minSymbolCode = config.minSymbolCode ?? 0;
-        this.#maxSymbolCode = config.maxSymbolCode ?? 65535;
-        this.#maxOperationsLength = config.maxOperationsLength ?? undefined;
+        if (this.#isValidStoreObject(config)) {
+            if (this.#isValidStoreObject(config.operationsStore)) {
+                for (const [key, value] of Object.entries(config.operationsStore)) {
+                    console.log(`${key}: ${typeof value}`);
+                }
+                this.operationsStore = config.operationsStore;
+            }
+            if (this.#isValidStoreObject(config.valuesStore)) {
+                for (const [key, value] of Object.entries(config.valuesStore)) {
+                    console.log(`${key}: ${typeof value}`);
+                }
+                this.valuesStore = config.valuesStore;
+            }
+            if (typeof config.ignoreWarnings === 'boolean') {
+                this.ignoreWarnings = config.ignoreWarnings;
+            }
+            if (this.#isValidMaxOperationsLength(config.maxOperationsLength)) {
+                this.#maxOperationsLength = config.maxOperationsLength;
+            }
+        }
     }
 
     /**
@@ -102,6 +111,37 @@ export default class OpMapper {
     }
 
     /**
+     * Check whether the value is a valid store object with key value pairs.
+     * 
+     * @param {*} value The value to be checked.
+     * @returns boolean
+     */
+    #isValidStoreObject(value) {
+        return (
+            typeof value === 'object'
+            && value !== null
+            && Array.isArray(value) === false
+            && Object.keys(value).length > 0
+            && value.constructor !== undefined
+            && value.constructor.prototype.hasOwnProperty('isPrototypeOf')
+        );
+    }
+
+    /**
+     * Check whether the value is a valid maxOperationsLength number.
+     * 
+     * @param {number} value The value to be checked.
+     * @returns boolean
+     */
+    #isValidMaxOperationsLength(value) {
+        return (
+            typeof value === 'number'
+            && value > 0
+            && Number.isSafeInteger(value)
+        );
+    }
+
+    /**
      * Checks the validity of the arguments of the respective method.
      * 
      * @private
@@ -113,27 +153,58 @@ export default class OpMapper {
     #validateArguments(method, args) {
         switch (method) {
             case 'constructor':
-                console.debug(args);
+                if (! this.#isValidStoreObject(args[0])) {
+                    console.error(`[OpMapper] When creating an instance of OpMapper, the 'config' parameter, if defined, must be an object with valid key-value pairs.`);
+                } else {
+                    if (! this.#isValidStoreObject(args[0].operationsStore)) {
+                        console.error(`[OpMapper] When creating an instance of OpMapper, the 'config.operationsStore' property, if defined, must be an object with valid key-value pairs.`);
+                    }
+                    if (! this.#isValidStoreObject(args[0].valuesStore)) {
+                        console.error(`[OpMapper] When creating an instance of OpMapper, the 'config.valuesStore' property, if defined, must be an object with valid key-value pairs.`);
+                    }
+                    if (
+                        typeof args[0].ignoreWarnings !== 'undefined'
+                        && typeof args[0].ignoreWarnings !== 'boolean'
+                    ) {
+                        console.error(`[OpMapper] When creating an instance of OpMapper, the 'config.ignoreWarnings' property, if defined, must be a boolean.`);
+                    }
+                    if (
+                        typeof args[0].maxOperationsLength !== 'undefined'
+                        && ! this.#isValidMaxOperationsLength(args[0].maxOperationsLength)
+                    ) {
+                        console.error(`[OpMapper] When creating an instance of OpMapper, the 'config.maxOperationsLength' property, if defined, must be a positive safe integer.`);
+                    }
+                }
                 break;
 
             case 'storeOperation':
             case 'storeValue':
-                const isString = typeof args[0] === 'string';
-                const isNumber = typeof args[0] === 'number';
-                if (! isString && ! isNumber) {
+                const symbol_isString = typeof args[0] === 'string';
+                const symbol_isNumber = typeof args[0] === 'number';
+                if (! symbol_isString && ! symbol_isNumber) {
                     throw new Error(`[OpMapper] Unable to ${method} with symbol '${args[0]}'. The symbol must be a string or a number.`);
                 }
-                if (isString && args[0].length !== 1) {
-                    throw new Error(`[OpMapper] Unable to ${method} with symbol '${args[0]}'. A string symbol must consist of a single character.`);
+                if (symbol_isString) {
+                    if (args[0].length !== 1) {
+                        throw new Error(`[OpMapper] Unable to ${method} with symbol '${args[0]}'. A string symbol must consist of a single character.`);
+                    } else {
+                        const symbol_charCode = args[0].charCodeAt(0);
+                        if (
+                            symbol_charCode < this.#minSymbolCode
+                            || symbol_charCode > this.#maxSymbolCode
+                        ) {
+                            throw new Error(`[OpMapper] Unable to ${method} with symbol '${args[0]}', because it's character code is ${symbol_charCode}. A string symbol's character code must be within the range of ${this.#minSymbolCode} and ${this.#maxSymbolCode}.`);
+                        }
+                    }
                 } else if (
-                    isNumber
+                    symbol_isNumber
                     && (
                         ! Number.isInteger(args[0])
                         || args[0] < this.#minSymbolCode
                         || args[0] > this.#maxSymbolCode
                     )
                 ) {
-                    throw new Error(`[OpMapper] Unable to ${method} with symbol '${args[0]}'. Based on the current configuration, a numeric symbol must be an integer within the range of ${this.#minSymbolCode} and ${this.#maxSymbolCode}.`);
+                    throw new Error(`[OpMapper] Unable to ${method} with symbol '${args[0]}'. A numeric symbol must be an integer within the range of ${this.#minSymbolCode} and ${this.#maxSymbolCode}.`);
                 }
                 break;
 
