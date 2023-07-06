@@ -2,40 +2,63 @@ import Alpine from './../node_modules/alpinejs/dist/module.esm.js';
 import OpMapper from './../index.js';
 
 window.Alpine = Alpine;
+window.OpMapper = OpMapper;
 
 document.addEventListener('alpine:init', () => {
-    Alpine.data('OpMapperBuilder', () => ({
-        opMapper: null,
+    let opMapper;
 
+    Alpine.data('OpMapperBuilder', () => ({
         init() {
-            this.opMapper = new OpMapper({
-                'A': ([x, y, d]) => {
+            const operationsStore = {
+                'A': (x, y, d) => {
                     console.log(`circle(${x}, ${y}, ${d})`);
                 },
-                'B': ([x, y, w, h]) => {
+                'B': (x, y, w, h) => {
                     console.log(`rect(${x}, ${y}, ${w}, ${h})`);
                 },
-            }, {
+            };
+            const valuesStore = {
                 'a': 30,
                 'b': 20,
                 'c': 55,
+            };
+            opMapper = new OpMapper({
+                operationsStore,
+                valuesStore,
+                ignoreWarnings: false,
+                minSymbolCode: 30,
+                maxSymbolCode: 9999,
+                maxOperationsLength: 2000,
             });
+            
+            opMapper.storeOperation(72, (text) => {
+                console.debug(text);
+            });
+            console.debug(opMapper);
 
-            // const input = 'AaabBaacc';
-            // this.opMapper.decode(input);
-            // this.opMapper.execute();
+            const operations = 'AaabBaacc';
+            opMapper.execute(operations);
+            opMapper.execute('Ga');
         },
 
-        registerOperation(event) {
-            console.debug('registerOperation');
+        storeOperation(event) {
+            console.debug('storeOperation');
         },
 
-        registerMapping(event) {
-            console.debug('registerMapping');
+        storeValue(event) {
+            console.debug('storeValue');
         },
 
-        registerMappingRange(event) {
-            console.debug('registerMappingRange');
+        storeValuesRange(event) {
+            console.debug('storeValuesRange');
+        },
+
+        operationsStore() {
+            return opMapper.operationsStore;
+        },
+
+        valuesStore() {
+            return opMapper.valuesStore;
         }
     }));
 });

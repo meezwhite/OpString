@@ -15,14 +15,14 @@
     <a href="https://github.com/meezwhite/OpMapper" target="_blank">GitHub</a>
     <p>OpMapper is a lightweight JavaScript library for encoding, decoding and executing operations defined by UTF-8 char sequences.</p>
     <div id="actions_wrapper">
-        <button @click="registerOperation">registerOperation</button>
-        <button @click="registerMapping">registerMapping</button>
-        <button @click="registerMappingRange">registerMappingRange</button>
+        <button @click="storeOperation">storeOperation</button>
+        <button @click="storeValue">storeValue</button>
+        <button @click="storeValuesRange">storeValuesRange</button>
     </div>
     <div>
         <h2>Operations</h2>
         <div id="operations_table">
-            <template x-for="(operation, char) in opMapper.operations" :key="char">
+            <template x-for="(operation, char) in operationsStore()" :key="char">
                 <div class="char-cell">
                     <span class="char-decimal" x-text="char.charCodeAt(0)"></span>
                     <span class="char-symbol" x-text="char"></span>
@@ -34,7 +34,7 @@
     <div>
         <h2>Mappings</h2>
         <div id="mappings_table">
-            <template x-for="(mapping, char) in opMapper.mappings" :key="char">
+            <template x-for="(mapping, char) in valuesStore()" :key="char">
                 <div class="char-cell">
                     <span class="char-decimal" x-text="char.charCodeAt(0)"></span>
                     <span class="char-symbol" x-text="char"></span>
