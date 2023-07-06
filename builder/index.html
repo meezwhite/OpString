@@ -24,10 +24,10 @@
     <div>
         <h2>Operations</h2>
         <div id="operations_table">
-            <template x-for="(operation, char) in operationsStore()" :key="char">
+            <template x-for="(operation, charCode) in operationsStore()" :key="charCode">
                 <div class="char-cell">
-                    <span class="char-decimal" x-text="char.charCodeAt(0)"></span>
-                    <span class="char-symbol" x-text="char"></span>
+                    <span class="char-code" x-text="charCode"></span>
+                    <span class="char-symbol" x-text="String.fromCharCode(charCode)"></span>
                     <span class="char-mapped-value">ƒ</span>
                 </div>
             </template>
@@ -36,10 +36,10 @@
     <div>
         <h2>Mappings</h2>
         <div id="mappings_table">
-            <template x-for="(mapping, char) in valuesStore()" :key="char">
+            <template x-for="(mapping, charCode) in valuesStore()" :key="charCode">
                 <div class="char-cell">
-                    <span class="char-decimal" x-text="char.charCodeAt(0)"></span>
-                    <span class="char-symbol" x-text="char"></span>
+                    <span class="char-code" x-text="charCode"></span>
+                    <span class="char-symbol" x-text="String.fromCharCode(charCode)"></span>
                     <span class="char-mapped-value" x-text="mapping"></span>
                 </div>
             </template>

@@ -19,7 +19,7 @@
 .char-cell:last-child {
     border-right-width: 2px;
 }
-.char-decimal {
+.char-code {
     border-bottom: 1px solid black;
     font-size: 1.2rem;
 }
@@ -30,7 +30,7 @@
 .char-mapped-value {
     font-size: 1.2rem;
 }
-.char-decimal:hover,
+.char-code:hover,
 .char-symbol:hover,
 .char-mapped-value:hover {
     background: #ddd;
