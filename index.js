@@ -133,6 +133,9 @@ export default class OpMapper {
     /**
      * Check whether the value is a valid maxOperationsLength number.
      * 
+     * @private
+     * @method isValidMaxOperationsLength
+     * 
      * @param {number} value The value to be checked.
      * @returns boolean
      */
