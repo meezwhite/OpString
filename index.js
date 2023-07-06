@@ -121,10 +121,10 @@ export default class OpMapper {
                 const isString = typeof args[0] === 'string';
                 const isNumber = typeof args[0] === 'number';
                 if (! isString && ! isNumber) {
-                    throw new Error(`[OpMapper] Unable to ${method} with symbol "${args[0]}". A symbol must be of type string or number.`);
+                    throw new Error(`[OpMapper] Unable to ${method} with symbol '${args[0]}'. The symbol must be a string or a number.`);
                 }
                 if (isString && args[0].length !== 1) {
-                    throw new Error(`[OpMapper] Unable to ${method} with symbol "${args[0]}". A symbol of type string must be a single character.`);
+                    throw new Error(`[OpMapper] Unable to ${method} with symbol '${args[0]}'. A string symbol must consist of a single character.`);
                 } else if (
                     isNumber
                     && (
@@ -133,20 +133,20 @@ export default class OpMapper {
                         || args[0] > this.#maxSymbolCode
                     )
                 ) {
-                    throw new Error(`[OpMapper] Unable to ${method} with symbol "${args[0]}". Given the current configuration a symbol of type number must be an integer between ${this.#minSymbolCode} and ${this.#maxSymbolCode}.`);
+                    throw new Error(`[OpMapper] Unable to ${method} with symbol '${args[0]}'. Based on the current configuration, a numeric symbol must be an integer within the range of ${this.#minSymbolCode} and ${this.#maxSymbolCode}.`);
                 }
                 break;
 
             case 'execute':
                 if (typeof args[0] !== 'string') {
-                    throw new Error(`[OpMapper] Unable to execute the provided operations sequence "${args[0]}". An operation must be of type string.`);
+                    throw new Error(`[OpMapper] Unable to execute the provided operations sequence '${args[0]}'. Each operation must be a string.`);
                 }
                 if (
                     ! this.ignoreWarnings
                     && this.#maxOperationsLength
                     && args[0].length > this.#maxOperationsLength
                 ) {
-                    console.warn(`[OpMapper] Given the current configuration the provided operations sequence exceeds the maxOperationsLength guideline of ${this.#maxOperationsLength} characters.`);
+                    console.warn(`[OpMapper] The provided operations sequence exceeds the configured 'maxOperationsLength' of ${this.#maxOperationsLength} characters.`);
                 }
                 break;
             
