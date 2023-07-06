@@ -4,10 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OpMapper</title>
-    <link rel="stylesheet" href="./styles.css">
+    <!-- <link rel="stylesheet" href="./styles.css"> -->
     <!-- <script type="module" src="./app.js" defer></script> -->
     <script>
-        document.write('<script type="module" src="./app.js?ts='+(new Date().getTime())+'"><'+'/script>');
+        const ts = (new Date).getTime();
+        document.write('<link rel="stylesheet" href="./styles.css?ts='+ts+'">');
+        document.write('<script type="module" src="./app.js?ts='+ts+'"><'+'/script>');
     </script>
 </head>
 <body x-data="OpMapperBuilder" x-cloak>
