@@ -16,7 +16,7 @@ export default class OpMapper {
     #maxOperationsLength;
 
     /**
-     * Initialize an OpMapper instance.
+     * Creates an instance of OpMapper.
      * 
      * @param {Object} [config] The config object to configure OpMapper features.
      * @param {Object} config.operationsStore The initial object storing operation mappings.
@@ -41,7 +41,7 @@ export default class OpMapper {
     }
 
     /**
-     * Store an operation mapping.
+     * Stores an operation mapping.
      * 
      * @method storeOperation
      * 
@@ -58,7 +58,7 @@ export default class OpMapper {
     }
 
     /**
-     * Store a value mapping.
+     * Stores a value mapping.
      * 
      * @method storeValue
      * 
@@ -75,7 +75,7 @@ export default class OpMapper {
     }
 
     /**
-     * Execute an operations sequence.
+     * Executes an operations sequence.
      * 
      * @method execute
      * 
