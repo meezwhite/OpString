@@ -190,18 +190,8 @@ export default class OpMapper {
                 if (! symbol_isString && ! symbol_isNumber) {
                     throw new Error(`[OpMapper] Unable to ${method} with symbol '${args[0]}'. The symbol must be a string or a number.`);
                 }
-                if (symbol_isString) {
-                    if (args[0].length !== 1) {
-                        throw new Error(`[OpMapper] Unable to ${method} with symbol '${args[0]}'. A string symbol must consist of a single character.`);
-                    } else {
-                        const symbol_charCode = args[0].charCodeAt(0);
-                        if (
-                            symbol_charCode < this.#minSymbolCode
-                            || symbol_charCode > this.#maxSymbolCode
-                        ) {
-                            throw new Error(`[OpMapper] Unable to ${method} with symbol '${args[0]}', because it's character code is ${symbol_charCode}. A string symbol's character code must be within the range of ${this.#minSymbolCode} and ${this.#maxSymbolCode}.`);
-                        }
-                    }
+                if (symbol_isString && args[0].length !== 1) {
+                    throw new Error(`[OpMapper] Unable to ${method} with symbol '${args[0]}'. A string symbol must consist of a single character.`);
                 } else if (
                     symbol_isNumber
                     && (
