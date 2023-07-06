@@ -111,7 +111,10 @@ export default class OpMapper {
     }
 
     /**
-     * Check whether the value is a valid store object with key value pairs.
+     * Check whether the value is a valid store object with key-value pairs.
+     * 
+     * @private
+     * @method isValidStoreObject
      * 
      * @param {*} value The value to be checked.
      * @returns boolean
