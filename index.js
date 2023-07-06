@@ -125,7 +125,7 @@ export default class OpMapper {
             && value !== null
             && Array.isArray(value) === false
             && Object.keys(value).length > 0
-            && value.constructor !== undefined
+            && typeof value.constructor !== 'undefined'
             && value.constructor.prototype.hasOwnProperty('isPrototypeOf')
         );
     }
