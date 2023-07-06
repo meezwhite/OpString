@@ -29,16 +29,14 @@ export default class OpMapper {
         this.#validateArguments('constructor', arguments);
         if (this.#isValidStoreObject(config)) {
             if (this.#isValidStoreObject(config.operationsStore)) {
-                for (const [key, value] of Object.entries(config.operationsStore)) {
-                    console.log(`${key}: ${typeof value}`);
+                for (const [symbol, fn] of Object.entries(config.operationsStore)) {
+                    this.storeOperation(symbol, fn);
                 }
-                this.operationsStore = config.operationsStore;
             }
             if (this.#isValidStoreObject(config.valuesStore)) {
-                for (const [key, value] of Object.entries(config.valuesStore)) {
-                    console.log(`${key}: ${typeof value}`);
+                for (const [symbol, value] of Object.entries(config.valuesStore)) {
+                    this.storeValue(symbol, value);
                 }
-                this.valuesStore = config.valuesStore;
             }
             if (typeof config.ignoreWarnings === 'boolean') {
                 this.ignoreWarnings = config.ignoreWarnings;
