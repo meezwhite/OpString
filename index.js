@@ -104,7 +104,7 @@ export default class OpMapper {
             if (operation) {
                 const args = [];
                 for (let j = i+1; j < operations.length; j++) {
-                    const mapping = this.valuesStore[operations[j]];
+                    const mapping = this.valuesStore[operations.charCodeAt(j)];
                     if (mapping) {
                         args.push(mapping);
                     } else {
