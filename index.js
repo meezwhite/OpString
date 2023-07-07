@@ -16,6 +16,13 @@ export default class OpMapper {
     #maxSymbolCode = 65535;
     #maxOperationsLength;
 
+    #validConfigKeys = [
+        'operationsStore',
+        'valuesStore',
+        'ignoreWarnings',
+        'maxOperationsLength',
+    ];
+
     /**
      * Creates an instance of OpMapper.
      * 
@@ -116,14 +123,20 @@ export default class OpMapper {
      * @method isValidStoreObject
      * 
      * @param {*} value The value to be checked.
+     * @param {string[]} [validKeys] The keys that the object may have. (default: any)
      * @returns {boolean}
      */
-    #isValidStoreObject(value) {
+    #isValidStoreObject(value, validKeys = []) {
+        let hasValidKeys = true;
+        if (validKeys.length !== 0) {
+            hasValidKeys = Object.keys(value).every(key => validKeys.includes(key));
+        }
         return (
             typeof value === 'object'
             && value !== null
             && Array.isArray(value) === false
             && Object.keys(value).length > 0
+            && hasValidKeys
             && typeof value.constructor !== 'undefined'
             && value.constructor.prototype.hasOwnProperty('isPrototypeOf') // Object.prototype
         );
