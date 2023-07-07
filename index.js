@@ -99,8 +99,7 @@ export default class OpMapper {
     execute(operations) {
         this.#validateArguments('execute', arguments);
         for (let i = 0; i < operations.length; i++) {
-            const charCode = operations.charCodeAt(i);
-            const operation = this.operationsStore[charCode];
+            const operation = this.operationsStore[operations.charCodeAt(i)];
             if (operation) {
                 const args = [];
                 for (let j = i+1; j < operations.length; j++) {
