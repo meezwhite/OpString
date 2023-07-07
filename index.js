@@ -1,5 +1,6 @@
 /**!
  * OpMapper
+ * 
  * @version 0.1.0
  * @license MIT
  * @copyright meezwhite
@@ -124,7 +125,7 @@ export default class OpMapper {
             && Array.isArray(value) === false
             && Object.keys(value).length > 0
             && typeof value.constructor !== 'undefined'
-            && value.constructor.prototype.hasOwnProperty('isPrototypeOf')
+            && value.constructor.prototype.hasOwnProperty('isPrototypeOf') // Object.prototype
         );
     }
 
