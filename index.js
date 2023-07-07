@@ -160,37 +160,63 @@ export default class OpMapper {
     }
 
     /**
-     * Checks the validity of the arguments of the respective method.
+     * Checks the validity of the arguments of the respective method and throws
+     * errors if necessary.
      * 
      * @private
      * @method validateArguments
      * 
      * @param {string} method Name of the method
      * @param {Array} args User given arguments to the respective method
+     * 
+     * @throws {TypeError} If the arguments are of an invalid type:
+     *   - 'constructor': If the 'config' parameter is not a valid object with valid keys, or if config's object properties are of an invalid type
+     *   - 'storeOperation' and 'storeValue': If the 'symbol' parameter is not a string or an integer
+     *   - 'storeOperation': If the 'fn' parameter is not a function
+     *   - 'execute': If the 'operation' parameter is not a string
+     * 
+     * @throws {SyntaxError} If the arguments have syntax errors:
+     *   - 'storeOperation' and 'storeValue': If the 'symbol' parameter is a string but not a single character
+     * 
+     * @throws {RangeError} If the arguments are out of valid range:
+     *   - 'storeOperation' and 'storeValue': If the 'symbol' parameter is an integer but out of range
+     *   - 'execute': If the 'operation' parameter exceeds the configured 'maxOperationsLength'
+     * 
+     * @returns {boolean}
      */
     #validateArguments(method, args) {
         switch (method) {
             case 'constructor':
-                if (! this.#isValidStoreObject(args[0])) {
-                    console.error(`[OpMapper] When creating an instance of OpMapper, the 'config' parameter, if defined, must be an object with valid key-value pairs.`);
-                } else {
-                    if (! this.#isValidStoreObject(args[0].operationsStore)) {
-                        console.error(`[OpMapper] When creating an instance of OpMapper, the 'config.operationsStore' property, if defined, must be an object with valid key-value pairs.`);
-                    }
-                    if (! this.#isValidStoreObject(args[0].valuesStore)) {
-                        console.error(`[OpMapper] When creating an instance of OpMapper, the 'config.valuesStore' property, if defined, must be an object with valid key-value pairs.`);
-                    }
-                    if (
-                        typeof args[0].ignoreWarnings !== 'undefined'
-                        && typeof args[0].ignoreWarnings !== 'boolean'
-                    ) {
-                        console.error(`[OpMapper] When creating an instance of OpMapper, the 'config.ignoreWarnings' property, if defined, must be a boolean.`);
-                    }
-                    if (
-                        typeof args[0].maxOperationsLength !== 'undefined'
-                        && ! this.#isValidMaxOperationsLength(args[0].maxOperationsLength)
-                    ) {
-                        console.error(`[OpMapper] When creating an instance of OpMapper, the 'config.maxOperationsLength' property, if defined, must be a positive safe integer.`);
+                if (args[0] !== undefined) {
+                    if (! this.#isValidStoreObject(args[0], this.#validConfigKeys)) {
+                        const validConfigKeysStr = this.#validConfigKeys.slice(0, -1).map(key => `'${key}'`).join(', ');
+                        const lastValidConfigKey = this.#validConfigKeys[this.#validConfigKeys.length-1];
+                        throw new TypeError(`The 'config' parameter, if defined, must be an object with valid key-value pairs. The valid 'config' properties are ${validConfigKeysStr} and '${lastValidConfigKey}'.`);
+                    } else {
+                        if (
+                            typeof args[0].operationsStore !== 'undefined'
+                            && ! this.#isValidStoreObject(args[0].operationsStore)
+                        ) {
+                            throw new TypeError(`The 'config.operationsStore' property, if defined, must be an object with valid key-value pairs.`);
+                        }
+                        if (
+                            typeof args[0].valuesStore !== 'undefined'
+                            && ! this.#isValidStoreObject(args[0].valuesStore)
+                        ) {
+                            throw new TypeError(`The 'config.valuesStore' property, if defined, must be an object with valid key-value pairs.`);
+                        }
+                        if (
+                            typeof args[0].ignoreWarnings !== 'undefined'
+                            && typeof args[0].ignoreWarnings !== 'boolean'
+                        ) {
+                            throw new TypeError(`The 'config.ignoreWarnings' property, if defined, must be a boolean.`);
+                        }
+                        if (
+                            typeof args[0].maxOperationsLength !== 'undefined'
+                            && ! this.#isValidMaxOperationsLength(args[0].maxOperationsLength)
+                        ) {
+                            throw new TypeError(`The 'config.maxOperationsLength' property, if defined, must be a positive safe integer.`);
+                        }
                     }
                 }
                 break;
@@ -199,33 +225,39 @@ export default class OpMapper {
             case 'storeValue':
                 const symbol_isString = typeof args[0] === 'string';
                 const symbol_isNumber = typeof args[0] === 'number';
-                if (! symbol_isString && ! symbol_isNumber) {
-                    throw new Error(`[OpMapper] Unable to ${method} with symbol '${args[0]}'. The symbol must be a string or a number.`);
+                if (symbol_isString === false && symbol_isNumber === false) {
+                    throw new TypeError(`[OpMapper] Unable to ${method} with symbol '${args[0]}'. The symbol must be a string or an integer.`);
                 }
                 if (symbol_isString && args[0].length !== 1) {
-                    throw new Error(`[OpMapper] Unable to ${method} with symbol '${args[0]}'. A string symbol must consist of a single character.`);
-                } else if (
-                    symbol_isNumber
-                    && (
-                        ! Number.isInteger(args[0])
-                        || args[0] < this.#minSymbolCode
+                    throw new SyntaxError(`[OpMapper] Unable to ${method} with symbol '${args[0]}'. A string symbol must consist of a single character.`);
+                } else if (symbol_isNumber) {
+                    const numbericSymbolMsg = `[OpMapper] Unable to ${method} with symbol '${args[0]}'. A numeric symbol must be an integer within the range of ${this.#minSymbolCode} and ${this.#maxSymbolCode}.`;
+                    if (! Number.isInteger(args[0])) {
+                        throw new TypeError(numbericSymbolMsg);
+                    } else if (
+                        args[0] < this.#minSymbolCode
                         || args[0] > this.#maxSymbolCode
-                    )
-                ) {
-                    throw new Error(`[OpMapper] Unable to ${method} with symbol '${args[0]}'. A numeric symbol must be an integer within the range of ${this.#minSymbolCode} and ${this.#maxSymbolCode}.`);
+                    ) {
+                        throw new RangeError(numbericSymbolMsg);
+                    }
+                }
+                if (method === 'storeOperation') {
+                    if (typeof args[1] !== 'function') {
+                        throw new TypeError(`[OpMapper] Unable to ${method} with symbol '${args[0]}'. The 'fn' parameter must be a function.`);
+                    }
                 }
                 break;
 
             case 'execute':
                 if (typeof args[0] !== 'string') {
-                    throw new Error(`[OpMapper] Unable to execute the provided operations sequence '${args[0]}'. Each operation must be a string.`);
+                    throw new TypeError(`[OpMapper] Unable to execute the provided operations sequence '${args[0]}'. Each operation must be a string.`);
                 }
                 if (
                     ! this.ignoreWarnings
                     && this.#maxOperationsLength !== undefined
                     && args[0].length > this.#maxOperationsLength
                 ) {
-                    console.warn(`[OpMapper] The provided operations sequence exceeds the configured 'maxOperationsLength' of ${this.#maxOperationsLength} characters.`);
+                    throw new RangeError(`[OpMapper] The provided operations sequence exceeds the configured 'maxOperationsLength' of ${this.#maxOperationsLength} characters.`);
                 }
                 break;
             
