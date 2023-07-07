@@ -22,8 +22,8 @@ export default class OpMapper {
      * @param {Object} [config] Config object to configure OpMapper features.
      * @param {Object} [config.operationsStore] Initial object storing operation mappings. (default: {})
      * @param {Object} [config.valuesStore] Initial object storing value mappings. (default: {})
-     * @param {Boolean} [config.ignoreWarnings] Specifies whether warnings should be ignored. (default: false)
-     * @param {Number} [config.maxOperationsLength] Specifies a maximum operations sequence length guideline.
+     * @param {boolean} [config.ignoreWarnings] Specifies whether warnings should be ignored. (default: false)
+     * @param {number} [config.maxOperationsLength] Specifies a maximum operations sequence length guideline.
      *     If defined, it must be a positive safe integer. (default: undefined)
      */
     constructor(config) {
@@ -116,7 +116,7 @@ export default class OpMapper {
      * @method isValidStoreObject
      * 
      * @param {*} value The value to be checked.
-     * @returns boolean
+     * @returns {boolean}
      */
     #isValidStoreObject(value) {
         return (
@@ -136,7 +136,7 @@ export default class OpMapper {
      * @method isValidMaxOperationsLength
      * 
      * @param {number} value The value to be checked.
-     * @returns boolean
+     * @returns {boolean}
      */
     #isValidMaxOperationsLength(value) {
         return (
@@ -152,7 +152,7 @@ export default class OpMapper {
      * @private
      * @method validateArguments
      * 
-     * @param {String} method Name of the method
+     * @param {string} method Name of the method
      * @param {Array} args User given arguments to the respective method
      */
     #validateArguments(method, args) {
