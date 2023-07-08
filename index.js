@@ -119,9 +119,9 @@ export default class OpMapper {
             this.#validateArguments('storeOperation', arguments);
             const symbolType = this.#getSymbolType(symbol);
             if (symbolType === this.#symbolTypeInteger) {
-                this.#operationsStore[symbol] = callback;
+                this.operationsStore[symbol] = callback;
             } else if (symbolType === this.#symbolTypeString) {
-                this.#operationsStore[symbol.charCodeAt(0)] = callback;
+                this.operationsStore[symbol.charCodeAt(0)] = callback;
             }
         } catch (error) {
             this.#logError(`[OpMapper] ${error.name}: ${error.message}`);
@@ -193,7 +193,7 @@ export default class OpMapper {
      */
     #executeOperationsSequence(operationsSequence) {
         for (let i = 0; i < operationsSequence.length; i++) {
-            const operation = this.#operationsStore[operationsSequence.charCodeAt(i)];
+            const operation = this.operationsStore[operationsSequence.charCodeAt(i)];
             if (operation) {
                 const args = [];
                 for (let j = i+1; j < operationsSequence.length; j++) {
