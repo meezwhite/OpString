@@ -91,6 +91,15 @@ export default class OpMapper {
     }
 
     /**
+     * Returns the operations sequence data array.
+     * 
+     * @returns {Object[]}
+     */
+    getOperationsSequenceData() {
+        return this.#operationsSequenceData;
+    }
+
+    /**
      * Sets the operations sequence.
      * 
      * @method setOperationsSequence
