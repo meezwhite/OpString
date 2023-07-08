@@ -260,6 +260,26 @@ export default class OpMapper {
     }
 
     /**
+     * Checks whether the provided operations sequence is within the configured limit.
+     * If `maxOperationsSequenceLength` has not been configured, return `true`.
+     * 
+     * @private
+     * @method isOperationsSequenceLengthWithinLimit
+     * 
+     * @param {string} operationsSequence The operations sequence to be checked.
+     * @returns {boolean}
+     */
+    #isOperationsSequenceLengthWithinLimit(operationsSequence) {
+        if (
+            this.maxOperationsSequenceLength !== undefined
+            && operationsSequence.length > this.maxOperationsSequenceLength
+        ) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * Logs the provided error based on the current `strictMode` configuration.
      * 
      * @param {string} error The error to be logged.
@@ -393,8 +413,7 @@ export default class OpMapper {
                 }
                 if (
                     typeof args[0] === 'string'
-                    && this.maxOperationsSequenceLength !== undefined
-                    && args[0].length > this.maxOperationsSequenceLength
+                    && ! this.#isOperationsSequenceLengthWithinLimit(args[0])
                 ) {
                     throw new RangeError(`Unable to ${method} the ${operationsSequenceType} operations sequence '${args[0]}'. The ${operationsSequenceType} operations sequence exceeds the configured 'maxOperationsSequenceLength' of ${this.maxOperationsSequenceLength} characters.`);
                 }
