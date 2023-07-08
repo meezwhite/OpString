@@ -55,12 +55,12 @@ export default class OpMapper {
             if (config !== undefined) {
                 if (typeof config.operationsStore !== 'undefined') {
                     for (const [symbol, callback] of Object.entries(config.operationsStore)) {
-                        this.storeOperation(symbol, callback);
+                        this.registerOperation(symbol, callback);
                     }
                 }
                 if (typeof config.valuesStore !== 'undefined') {
                     for (const [symbol, value] of Object.entries(config.valuesStore)) {
-                        this.storeValue(symbol, value);
+                        this.registerValue(symbol, value);
                     }
                 }
                 if (typeof config.maxOperationsSequenceLength !== 'undefined') {
@@ -107,16 +107,16 @@ export default class OpMapper {
     }
 
     /**
-     * Stores an operation mapping.
+     * Registers an operation mapping.
      * 
-     * @method storeOperation
+     * @method registerOperation
      * 
      * @param {string|number} symbol The character or character code that should be mapped to a function.
      * @param {function} callback The function that the symbol should be mapped to.
      */
-    storeOperation(symbol, callback) {
+    registerOperation(symbol, callback) {
         try {
-            this.#validateArguments('storeOperation', arguments);
+            this.#validateArguments('registerOperation', arguments);
             const symbolType = this.#getSymbolType(symbol);
             if (symbolType === this.#symbolTypeInteger) {
                 this.operationsStore[symbol] = callback;
@@ -129,16 +129,16 @@ export default class OpMapper {
     }
 
     /**
-     * Stores a value mapping.
+     * Registers a value mapping.
      * 
-     * @method storeValue
+     * @method registerValue
      * 
      * @param {string|number} symbol The character or character code that should be mapped to a value.
      * @param {*} value The value that the symbol should be mapped to.
      */
-    storeValue(symbol, value) {
+    registerValue(symbol, value) {
         try {
-            this.#validateArguments('storeValue', arguments);
+            this.#validateArguments('registerValue', arguments);
             const symbolType = this.#getSymbolType(symbol);
             if (symbolType === this.#symbolTypeInteger) {
                 this.valuesStore[symbol] = value;
@@ -324,16 +324,16 @@ export default class OpMapper {
      * @throws {TypeError} If the arguments are of an invalid type:
      *      - `constructor`: If the `config` parameter is not a valid object with valid keys, or if
      *              the config object properties are of an invalid type.
-     *      - `storeOperation` and `storeValue`: If the `symbol` parameter is not a string or an integer.
-     *      - `storeOperation`: If the `callback` parameter is not a function.
-     *      - `storeValue`: If the `value` parameter is `undefined`.
+     *      - `registerOperation` and `registerValue`: If the `symbol` parameter is not a string or an integer.
+     *      - `registerOperation`: If the `callback` parameter is not a function.
+     *      - `registerValue`: If the `value` parameter is `undefined`.
      *      - `execute`: If the main operations sequence or the `operationsSequence` parameter is not a string.
      * 
      * @throws {SyntaxError} If the arguments have syntax errors:
-     *      - `storeOperation` and `storeValue`: If the `symbol` parameter is a string but not a single character.
+     *      - `registerOperation` and `registerValue`: If the `symbol` parameter is a string but not a single character.
      * 
      * @throws {RangeError} If the arguments are out of valid range:
-     *      - `storeOperation` and `storeValue`: If the `symbol` parameter is an integer but out of range.
+     *      - `registerOperation` and `registerValue`: If the `symbol` parameter is an integer but out of range.
      *      - `execute`: If the main operations sequence or the `operationsSequence` parameter exceeds 
      *              the configured `maxOperationsSequenceLength`.
      * 
@@ -403,8 +403,8 @@ export default class OpMapper {
                 }
                 break;
 
-            case 'storeOperation':
-            case 'storeValue':
+            case 'registerOperation':
+            case 'registerValue':
                 const symbolType = this.#getSymbolType(args[0]);
                 if (symbolType === this.#symbolTypeInvalid) {
                     throw new TypeError(`Unable to ${method} with symbol '${args[0]}'. The symbol must be a string or an integer.`);
@@ -423,11 +423,11 @@ export default class OpMapper {
                 ) {
                     throw new RangeError(`Unable to ${method} with symbol '${args[0]}'. An integer symbol must be within the range of ${this.#minSymbolCharCode} and ${this.#maxSymbolCharCode}.`);
                 }
-                if (method === 'storeOperation') {
+                if (method === 'registerOperation') {
                     if (typeof args[1] !== 'function') {
                         throw new TypeError(`Unable to ${method} with symbol '${args[0]}'. The 'callback' parameter must be a function.`);
                     }
-                } else if (method === 'storeValue') {
+                } else if (method === 'registerValue') {
                     if (typeof args[1] === 'undefined') {
                         throw new TypeError(`Unable to ${method} with symbol '${args[0]}'. The 'value' parameter cannot be undefined.`);
                     }
