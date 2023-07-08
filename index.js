@@ -288,6 +288,7 @@ export default class OpMapper {
      *              the config object properties are of an invalid type.
      *      - `storeOperation` and `storeValue`: If the `symbol` parameter is not a string or an integer.
      *      - `storeOperation`: If the `callback` parameter is not a function.
+     *      - `storeValue`: If the `value` parameter is `undefined`.
      *      - `execute`: If the main operations sequence or the `operationsSequence` parameter is not a string.
      * 
      * @throws {SyntaxError} If the arguments have syntax errors:
@@ -372,6 +373,10 @@ export default class OpMapper {
                 if (method === 'storeOperation') {
                     if (typeof args[1] !== 'function') {
                         throw new TypeError(`Unable to ${method} with symbol '${args[0]}'. The 'callback' parameter must be a function.`);
+                    }
+                } else if (method === 'storeValue') {
+                    if (typeof args[1] === 'undefined') {
+                        throw new TypeError(`Unable to ${method} with symbol '${args[0]}'. The 'value' parameter cannot be undefined.`);
                     }
                 }
                 break;
