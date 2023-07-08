@@ -8,12 +8,13 @@
 export default class OpMapper {
     version = '0.1.0';
 
-    operationsSequence = '';
     operationsStore = {};
     valuesStore = {};
     maxOperationsSequenceLength;
     ignoreWarnings = false;
     strictMode = false;
+
+    #operationsSequence = '';
 
     #symbolTypeInvalid = 0;
     #symbolTypeInteger = 1;
@@ -51,6 +52,9 @@ export default class OpMapper {
         try {
             this.#validateArguments('constructor', arguments);
             if (config !== undefined) {
+                if (typeof config.operationsSequence !== 'undefined') {
+                    this.#operationsSequence = config.operationsSequence;
+                }
                 if (typeof config.operationsStore !== 'undefined') {
                     for (const [symbol, callback] of Object.entries(config.operationsStore)) {
                         this.storeOperation(symbol, callback);
@@ -77,6 +81,15 @@ export default class OpMapper {
     }
 
     /**
+     * Returns the main operations sequence.
+     * 
+     * @returns {string}
+     */
+    getOperationsSequence() {
+        return this.#operationsSequence;
+    }
+
+    /**
      * Stores an operation mapping.
      * 
      * @method storeOperation
@@ -89,9 +102,9 @@ export default class OpMapper {
             this.#validateArguments('storeOperation', arguments);
             const symbolType = this.#getSymbolType(symbol);
             if (symbolType === this.#symbolTypeInteger) {
-                this.operationsStore[symbol] = callback;
+                this.#operationsStore[symbol] = callback;
             } else if (symbolType === this.#symbolTypeString) {
-                this.operationsStore[symbol.charCodeAt(0)] = callback;
+                this.#operationsStore[symbol.charCodeAt(0)] = callback;
             }
         } catch (error) {
             this.#logError(`[OpMapper] ${error.name}: ${error.message}`);
@@ -163,7 +176,7 @@ export default class OpMapper {
      */
     #executeOperationsSequence(operationsSequence) {
         for (let i = 0; i < operationsSequence.length; i++) {
-            const operation = this.operationsStore[operationsSequence.charCodeAt(i)];
+            const operation = this.#operationsStore[operationsSequence.charCodeAt(i)];
             if (operation) {
                 const args = [];
                 for (let j = i+1; j < operationsSequence.length; j++) {
