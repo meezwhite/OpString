@@ -58,7 +58,11 @@ document.addEventListener('alpine:init', () => {
 
         valuesStore() {
             return opMapper.valuesStore;
-        }
+        },
+
+        operationsSequence() {
+            return opMapper.getOperationsSequence();
+        },
     }));
 });
 

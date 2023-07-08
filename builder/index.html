@@ -21,6 +21,11 @@
         <button @click="storeValue">storeValue</button>
         <button @click="storeValuesRange">storeValuesRange</button>
     </div>
+    <div id="operations_sequence_wrapper">
+        <h2>Operations Sequence</h2>
+        <p id="operations_sequence" x-text="operationsSequence()"></p>
+        <div>Length: <span x-text="operationsSequence().length"></span></div>
+    </div>
     <div>
         <h2>Operations</h2>
         <div id="operations_table">

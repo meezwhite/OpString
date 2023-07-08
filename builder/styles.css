@@ -2,6 +2,13 @@
 
 #actions_wrapper {
     display: flex;
+    margin-bottom: 1rem;
+}
+#operations_sequence_wrapper {
+    border-top: 1px solid black;
+}
+#operations_sequence {
+    font-size: 1.2rem;
 }
 #operations_table,
 #mappings_table {
