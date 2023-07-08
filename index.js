@@ -53,9 +53,6 @@ export default class OpMapper {
         try {
             this.#validateArguments('constructor', arguments);
             if (config !== undefined) {
-                if (typeof config.operationsSequence !== 'undefined') {
-                    this.setOperationsSequence(config.operationsSequence);
-                }
                 if (typeof config.operationsStore !== 'undefined') {
                     for (const [symbol, callback] of Object.entries(config.operationsStore)) {
                         this.storeOperation(symbol, callback);
@@ -68,6 +65,9 @@ export default class OpMapper {
                 }
                 if (typeof config.maxOperationsSequenceLength !== 'undefined') {
                     this.maxOperationsSequenceLength = config.maxOperationsSequenceLength;
+                }
+                if (typeof config.operationsSequence !== 'undefined') {
+                    this.setOperationsSequence(config.operationsSequence);
                 }
                 if (typeof config.ignoreWarnings === 'boolean') {
                     this.ignoreWarnings = config.ignoreWarnings;
