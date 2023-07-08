@@ -184,7 +184,7 @@ export default class OpMapper {
                     if (value) {
                         args.push(value);
                     } else {
-                        break;
+                        args.push(undefined);
                     }
                 }
                 operation(...args);
