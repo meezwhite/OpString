@@ -82,7 +82,7 @@ export default class OpMapper {
     }
 
     /**
-     * Returns the main operations sequence.
+     * Returns the operations sequence.
      * 
      * @returns {string}
      */
@@ -91,11 +91,11 @@ export default class OpMapper {
     }
 
     /**
-     * Sets the provided operations sequence as the main operations sequence.
+     * Sets the operations sequence
      * 
      * @method setOperationsSequence
      * 
-     * @param {string} operationsSequence The main operations sequence that should be set.
+     * @param {string} operationsSequence The operations sequence that should be set.
      */
     setOperationsSequence(operationsSequence) {
         try {
@@ -151,13 +151,13 @@ export default class OpMapper {
     }
 
     /**
-     * Attempts to execute the main operations sequence of the current instance or a provided
-     * operations sequence specified by the `operationsSequence` parameter.
+     * Attempts to execute the instance's operations sequence or a provided operations sequence 
+     * specified by the `operationsSequence` parameter.
      * 
      * @method execute
      * 
      * @param {string} [operationsSequence] The operations sequence to be executed instead of
-     *      the main operations sequence of the current instance.
+     *      the instance's operations sequence.
      */
     execute(operationsSequence) {
         try {
@@ -327,14 +327,14 @@ export default class OpMapper {
      *      - `registerOperation` and `registerValue`: If the `symbol` parameter is not a string or an integer.
      *      - `registerOperation`: If the `callback` parameter is not a function.
      *      - `registerValue`: If the `value` parameter is `undefined`.
-     *      - `execute`: If the main operations sequence or the `operationsSequence` parameter is not a string.
+     *      - `execute`: If the instance's operations sequence or the `operationsSequence` parameter is not a string.
      * 
      * @throws {SyntaxError} If the arguments have syntax errors:
      *      - `registerOperation` and `registerValue`: If the `symbol` parameter is a string but not a single character.
      * 
      * @throws {RangeError} If the arguments are out of valid range:
      *      - `registerOperation` and `registerValue`: If the `symbol` parameter is an integer but out of range.
-     *      - `execute`: If the main operations sequence or the `operationsSequence` parameter exceeds 
+     *      - `execute`: If the instance's operations sequence or the `operationsSequence` parameter exceeds
      *              the configured `maxOperationsSequenceLength`.
      * 
      * @returns {boolean}
