@@ -30,9 +30,6 @@ document.addEventListener('alpine:init', () => {
                 maxOperationsLength: 2000,
             });
             
-            opMapper.storeOperation(72, (text) => {
-                console.debug(text);
-            });
             console.debug(opMapper);
 
             const operations = 'AaabBaacc';
