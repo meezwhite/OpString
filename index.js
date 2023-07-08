@@ -384,19 +384,19 @@ export default class OpMapper {
             case 'executeMain':
             case 'executeProvided':
                 const operationsSequenceType = method.substring(7).toLowerCase();
-                // method = 'execute';
+                method = 'execute';
                 if (
                     typeof args[0] !== 'undefined'
                     && typeof args[0] !== 'string'
                 ) {
-                    throw new TypeError(`Unable to execute the ${operationsSequenceType} operations sequence '${args[0]}'. An operations sequence must be a string.`);
+                    throw new TypeError(`Unable to ${method} the ${operationsSequenceType} operations sequence '${args[0]}'. An operations sequence must be a string.`);
                 }
                 if (
                     typeof args[0] === 'string'
                     && this.maxOperationsSequenceLength !== undefined
                     && args[0].length > this.maxOperationsSequenceLength
                 ) {
-                    throw new RangeError(`The ${operationsSequenceType} operations sequence exceeds the configured 'maxOperationsSequenceLength' of ${this.maxOperationsSequenceLength} characters.`);
+                    throw new RangeError(`Unable to ${method} the ${operationsSequenceType} operations sequence '${args[0]}'. The ${operationsSequenceType} operations sequence exceeds the configured 'maxOperationsSequenceLength' of ${this.maxOperationsSequenceLength} characters.`);
                 }
                 break;
             
