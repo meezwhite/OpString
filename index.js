@@ -15,6 +15,7 @@ export default class OpMapper {
     strictMode = false;
 
     #operationsSequence = '';
+    #operationsSequenceData = [];
 
     #symbolTypeInvalid = 0;
     #symbolTypeInteger = 1;
@@ -53,7 +54,7 @@ export default class OpMapper {
             this.#validateArguments('constructor', arguments);
             if (config !== undefined) {
                 if (typeof config.operationsSequence !== 'undefined') {
-                    this.#operationsSequence = config.operationsSequence;
+                    this.setOperationsSequence(config.operationsSequence);
                 }
                 if (typeof config.operationsStore !== 'undefined') {
                     for (const [symbol, callback] of Object.entries(config.operationsStore)) {
@@ -87,6 +88,22 @@ export default class OpMapper {
      */
     getOperationsSequence() {
         return this.#operationsSequence;
+    }
+
+    /**
+     * Sets the provided operations sequence as the main operations sequence.
+     * 
+     * @method setOperationsSequence
+     * 
+     * @param {string} operationsSequence The main operations sequence that should be set.
+     */
+    setOperationsSequence(operationsSequence) {
+        try {
+            this.#validateArguments('setOperationsSequence');
+            this.#operationsSequence = operationsSequence;
+        } catch (error) {
+            this.#logError(`[OpMapper] ${error.name}: ${error.message}`);
+        }
     }
 
     /**
@@ -367,6 +384,21 @@ export default class OpMapper {
                             throw new TypeError(`The 'config.strictMode' property, if defined, must be a boolean.`);
                         }
                     }
+                }
+                break;
+
+            case 'setOperationsSequence':
+                if (
+                    typeof args[0] !== 'undefined'
+                    && typeof args[0] !== 'string'
+                ) {
+                    throw new TypeError(`Unable to ${method} to '${args[0]}'. An operations sequence must be a string.`);
+                }
+                if (
+                    typeof args[0] === 'string'
+                    && ! this.#isOperationsSequenceLengthWithinLimit(args[0])
+                ) {
+                    throw new RangeError(`Unable to ${method} to '${args[0]}'. The provided operations sequence exceeds the configured 'maxOperationsSequenceLength' of ${this.maxOperationsSequenceLength} characters.`);
                 }
                 break;
 
