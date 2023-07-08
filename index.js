@@ -116,8 +116,8 @@ export default class OpMapper {
      * 
      * @method storeValue
      * 
-     * @param {string|number} symbol The character or character code that should be mapped to a function.
-     * @param {function} callback The function that the symbol should be mapped to.
+     * @param {string|number} symbol The character or character code that should be mapped to a value.
+     * @param {*} value The value that the symbol should be mapped to.
      */
     storeValue(symbol, value) {
         try {
