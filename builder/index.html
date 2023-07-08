@@ -26,7 +26,7 @@
         <div id="operations_table">
             <template x-for="(operation, charCode) in operationsStore()" :key="charCode">
                 <div class="char-cell">
-                    <span class="char-code" x-text="charCode"></span>
+                    code<span class="char-code" x-text="charCode"></span>
                     <span class="char-symbol" x-text="String.fromCharCode(charCode)"></span>
                     <span class="char-mapped-value">ƒ</span>
                 </div>
@@ -38,9 +38,9 @@
         <div id="mappings_table">
             <template x-for="(mapping, charCode) in valuesStore()" :key="charCode">
                 <div class="char-cell">
-                    <span class="char-code" x-text="charCode"></span>
+                    code<span class="char-code" x-text="charCode"></span>
                     <span class="char-symbol" x-text="String.fromCharCode(charCode)"></span>
-                    <span class="char-mapped-value" x-text="mapping"></span>
+                    value<span class="char-mapped-value" x-text="mapping"></span>
                 </div>
             </template>
         </div>
