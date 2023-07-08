@@ -162,8 +162,8 @@ export default class OpMapper {
     execute(operationsSequence) {
         try {
             if (operationsSequence === undefined) {
-                this.#validateArguments('executeMain', [this.operationsSequence]);
-                this.#executeOperationsSequence(this.operationsSequence);
+                this.#validateArguments('executeMain', [this.#operationsSequence]);
+                this.#executeOperationsSequence(this.#operationsSequence);
             } else {
                 this.#validateArguments('executeProvided', arguments);
                 this.#executeOperationsSequence(operationsSequence);
@@ -175,7 +175,7 @@ export default class OpMapper {
                 this.#logError(`[OpMapper] ${error.name}: ${error.message}`);
                 if (! strictMode) {
                     if (operationsSequence === undefined) {
-                        operationsSequence = this.operationsSequence;
+                        operationsSequence = this.#operationsSequence;
                     }
                     this.#executeOperationsSequence(operationsSequence);
                 }
