@@ -91,7 +91,7 @@ export default class OpMapper {
     }
 
     /**
-     * Sets the operations sequence
+     * Sets the operations sequence.
      * 
      * @method setOperationsSequence
      * 
