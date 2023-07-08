@@ -217,21 +217,6 @@ export default class OpMapper {
     }
 
     /**
-     * Logs the provided error based on the current `strictMode` configuration.
-     * 
-     * @param {string} error The error to be logged.
-     */
-    #logError(error) {
-        if (this.strictMode) {
-            console.error(error);
-        } else {
-            if (! this.ignoreWarnings) {
-                console.warn(error);
-            }
-        }
-    }
-
-    /**
      * Check whether the value is a valid store object with key-value pairs.
      * 
      * @private
@@ -272,6 +257,21 @@ export default class OpMapper {
             && value > 0
             && Number.isSafeInteger(value)
         );
+    }
+
+    /**
+     * Logs the provided error based on the current `strictMode` configuration.
+     * 
+     * @param {string} error The error to be logged.
+     */
+    #logError(error) {
+        if (this.strictMode) {
+            console.error(error);
+        } else {
+            if (! this.ignoreWarnings) {
+                console.warn(error);
+            }
+        }
     }
 
     /**
