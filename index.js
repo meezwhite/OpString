@@ -99,7 +99,7 @@ export default class OpMapper {
      */
     setOperationsSequence(operationsSequence) {
         try {
-            this.#validateArguments('setOperationsSequence');
+            this.#validateArguments('setOperationsSequence', arguments);
             this.#operationsSequence = operationsSequence;
         } catch (error) {
             this.#logError(`[OpMapper] ${error.name}: ${error.message}`);
