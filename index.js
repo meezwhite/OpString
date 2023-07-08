@@ -261,12 +261,12 @@ export default class OpMapper {
      * Check whether the value is a valid maxOperationsSequenceLength number.
      * 
      * @private
-     * @method isValidMaxOperationsLength
+     * @method isValidMaxOperationsSequenceLength
      * 
      * @param {*} value The value to be checked.
      * @returns {boolean}
      */
-    #isValidMaxOperationsLength(value) {
+    #isValidMaxOperationsSequenceLength(value) {
         return (
             typeof value === 'number'
             && value > 0
@@ -330,7 +330,7 @@ export default class OpMapper {
                         }
                         if (
                             typeof args[0].maxOperationsSequenceLength !== 'undefined'
-                            && ! this.#isValidMaxOperationsLength(args[0].maxOperationsSequenceLength)
+                            && ! this.#isValidMaxOperationsSequenceLength(args[0].maxOperationsSequenceLength)
                         ) {
                             throw new TypeError(`The 'config.maxOperationsSequenceLength' property, if defined, must be a positive safe integer.`);
                         }
