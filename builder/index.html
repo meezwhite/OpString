@@ -45,7 +45,7 @@
                 <div class="char-cell">
                     code<span class="char-code" x-text="charCode"></span>
                     <span class="char-symbol" x-text="String.fromCharCode(charCode)"></span>
-                    value<span class="char-mapped-value" x-text="mapping"></span>
+                    value<span class="char-mapped-value" x-text="mapping !== null ? mapping : 'null'"></span>
                 </div>
             </template>
         </div>
