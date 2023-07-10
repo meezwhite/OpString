@@ -16,13 +16,14 @@ export default class OpMapper {
 
     #operationsSequence = '';
     #operationsSequenceData = [];
+    #nextOperationId = 1;
 
     #symbolTypeInvalid = 0;
-    #symbolTypeInteger = 1;
-    #symbolTypeString = 2;
+    #symbolTypeString = 1;
+    #symbolTypeInteger = 2;
 
-    #minSymbolCharCode = 0;
-    #maxSymbolCharCode = 65535;
+    #minCharCode = 0;
+    #maxCharCode = 65535;
 
     #validConfigKeys = [
         'operationsSequence',
@@ -41,12 +42,12 @@ export default class OpMapper {
      *      when `execute` is called without providing the `operationsSequence` parameter. (default: '')
      * @param {Object} [config.operationsStore] Initial object storing operation mappings. (default: {})
      * @param {Object} [config.valuesStore] Initial object storing value mappings. (default: {})
-     * @param {number} [config.maxOperationsSequenceLength] Specifies a maximum allowed operations sequence length.
-     *      If defined, it must be a positive safe integer. (default: undefined)
+     * @param {number} [config.maxOperationsSequenceLength] Specifies a maximum allowed operations
+     *      sequence length. If defined, it must be a positive safe integer. (default: undefined)
      * @param {boolean} [config.ignoreWarnings] Specifies whether warnings should be ignored. (default: false)
      * @param {boolean} [config.strictMode] Specifies the behavior of the library with regard to errors.
      *      If set to `true`, errors will be logged; otherwise, warnings will be logged. Furthermore,
-     *      if set to `true` the `maxOperationsSequenceLength` must be adhered to, otherwise the
+     *      if set to `true` the `maxOperationsSequenceLength` must be adhered to, otherwise, the
      *      respective operations sequence will not be executed. (default: false)
      */
     constructor(config) {
@@ -82,6 +83,114 @@ export default class OpMapper {
     }
 
     /**
+     * Appends an operation and corresponding values to the operations sequence.
+     * 
+     * @param {string|number} operation The character code of the operation to be appended.
+     * @param {Array<string|number>} [values] An array with the characters or character
+     *      codes of the values corresponding to the operation to be appended.
+     * @returns {number|null} The id of the appended operation.
+     */
+    append(operation, values) {
+        try {
+            this.#validateArguments('append', arguments);
+            this.#operationsSequenceData.push({
+                id: this.#nextOperationId++,
+                operation: this.#computeCharCode(operation),
+                values: this.#computeCharCodes(values),
+            });
+            this.#computeOperationsSequence();
+        } catch (error) {
+            this.#logError(`[OpMapper] ${error.name}: ${error.message}`);
+        }
+    }
+
+    /**
+     * Adds an operation and corresponding values to the operations sequence at 
+     * the specified index.
+     * 
+     * @param {number} index The index at which the operation should be added.
+     * @param {string|number} operation The character or character code of the operation to be added.
+     * @param {Array<string|number>} [values] An array with the characters or character codes of 
+     *      the values corresponding to the operation to be added.
+     * @returns {number|null} The id of the inserted operation.
+     */
+    insert(index, operation, values) {
+        try {
+            this.#validateArguments('add', arguments);
+            this.#operationsSequenceData.splice(index, 0, {
+                id: this.#nextOperationId++,
+                operation: this.#computeCharCode(operation),
+                values: this.#computeCharCodes(values),
+            });
+            this.#computeOperationsSequence();
+        } catch (error) {
+            this.#logError(`[OpMapper] ${error.name}: ${error.message}`);
+        }
+    }
+
+    /**
+     * Prepends an operation and corresponding values to the operations sequence.
+     * 
+     * @param {string|number} operation The character code of the operation to be prepended.
+     * @param {Array<string|number>} [values] An array with the character codes of the values
+     *      corresponding to the operation to be prepended.
+     * @returns {number|null} The id of the prepended operation.
+     */
+    prepend(operation, values) {
+        try {
+            this.#validateArguments('prepend', arguments);
+            this.#operationsSequenceData.unshift({
+                id: this.#nextOperationId++,
+                operation: this.#computeCharCode(operation),
+                values: this.#computeCharCodes(values),
+            });
+            this.#computeOperationsSequence();
+        } catch (error) {
+            this.#logError(`[OpMapper] ${error.name}: ${error.message}`);
+        }
+    }
+
+    /**
+     * Removes the operation with the specified id from the operations sequence.
+     * 
+     * @param {number} id The id of the operation that should be removed.
+     * 
+     * @throws {ReferenceError} If there is no operation with the specified id.
+     * 
+     * @returns {boolean} Whether the respective operation has been removed.
+     */
+    remove(id) {
+        try {
+            this.#validateArguments('remove', arguments);
+            const index = this.#operationsSequenceData.findIndex(operation => operation.id === id);
+            if (index !== -1) {
+                this.#operationsSequenceData.splice(index, 1);
+                this.#computeOperationsSequence();
+            } else {
+                throw new ReferenceError(`Cannot remove operation with id ${id}, since not found.`);
+            }
+        } catch (error) {
+            this.#logError(`[OpMapper] ${error.name}: ${error.message}`);
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Computes the operations sequence from the operations sequence data array.
+     */
+    #computeOperationsSequence() {
+        let operationsSequence = '';
+        for (let i = 0; i < this.#operationsSequenceData.length; i++) {
+            operationsSequence += String.fromCharCode(this.#operationsSequenceData[i].operation);
+            for (let j = 0; j < this.#operationsSequenceData[i].values.length; j++) {
+                operationsSequence += String.fromCharCode(this.#operationsSequenceData[i].values[j]);
+            }
+        }
+        this.#operationsSequence = operationsSequence;
+    }
+
+    /**
      * Returns the operations sequence.
      * 
      * @returns {string}
@@ -93,7 +202,7 @@ export default class OpMapper {
     /**
      * Returns the operations sequence data array.
      * 
-     * @returns {Object[]}
+     * @returns {Array<Object>}
      */
     getOperationsSequenceData() {
         return this.#operationsSequenceData;
@@ -110,6 +219,43 @@ export default class OpMapper {
         try {
             this.#validateArguments('setOperationsSequence', arguments);
             this.#operationsSequence = operationsSequence;
+            this.#operationsSequenceData = [];
+            for (let i = 0; i < operationsSequence.length; i++) {
+                const operationCharCode = operationsSequence.charCodeAt(i);
+                const operation = this.operationsStore[operationCharCode];
+                if (operation) {
+                    const args = [];
+                    for (let j = i+1; j < operationsSequence.length; j++) {
+                        const valueCharCode = operationsSequence.charCodeAt(j);
+                        const value = this.valuesStore[valueCharCode];
+                        if (value) {
+                            args.push(valueCharCode);
+                        } else {
+                            if (this.operationsStore[valueCharCode]) {
+                                break;
+                            } else {
+                                /**
+                                 * NOTE: Register unknown value symbols with a value of `null`.
+                                 * Enables handling of unknown value symbols appropriately.
+                                 */
+                                this.registerValue(valueCharCode, null);
+                                args.push(valueCharCode);
+                            }
+                        }
+                    }
+                    this.#operationsSequenceData.push({
+                        id: this.#nextOperationId++,
+                        operation: operationCharCode,
+                        values: args,
+                    });
+                } else {
+                    /**
+                     * NOTE: Register unknown operation symbols with an empty callback function.
+                     * Enables handling of unknown operation symbols appropriately.
+                     */
+                    this.registerOperation(operationCharCode, () => {});
+                }
+            }
         } catch (error) {
             this.#logError(`[OpMapper] ${error.name}: ${error.message}`);
         }
@@ -127,10 +273,10 @@ export default class OpMapper {
         try {
             this.#validateArguments('registerOperation', arguments);
             const symbolType = this.#getSymbolType(symbol);
-            if (symbolType === this.#symbolTypeInteger) {
-                this.operationsStore[symbol] = callback;
-            } else if (symbolType === this.#symbolTypeString) {
+            if (symbolType === this.#symbolTypeString) {
                 this.operationsStore[symbol.charCodeAt(0)] = callback;
+            } else if (symbolType === this.#symbolTypeInteger) {
+                this.operationsStore[symbol] = callback;
             }
         } catch (error) {
             this.#logError(`[OpMapper] ${error.name}: ${error.message}`);
@@ -149,10 +295,10 @@ export default class OpMapper {
         try {
             this.#validateArguments('registerValue', arguments);
             const symbolType = this.#getSymbolType(symbol);
-            if (symbolType === this.#symbolTypeInteger) {
-                this.valuesStore[symbol] = value;
-            } else if (symbolType === this.#symbolTypeString) {
+            if (symbolType === this.#symbolTypeString) {
                 this.valuesStore[symbol.charCodeAt(0)] = value;
+            } else if (symbolType === this.#symbolTypeInteger) {
+                this.valuesStore[symbol] = value;
             }
         } catch (error) {
             this.#logError(`[OpMapper] ${error.name}: ${error.message}`);
@@ -169,23 +315,22 @@ export default class OpMapper {
      *      instead of the operations sequence of the current instance.
      */
     execute(operationsSequence) {
+        const operationsSequence_isUndefined = operationsSequence === undefined;
+        let caughtErrors = false;
         try {
-            if (operationsSequence === undefined) {
+            if (operationsSequence_isUndefined) {
                 this.#validateArguments('executeMain', [this.#operationsSequence]);
-                this.#executeOperationsSequence(this.#operationsSequence);
             } else {
                 this.#validateArguments('executeProvided', arguments);
-                this.#executeOperationsSequence(operationsSequence);
             }
         } catch (error) {
-            if (error instanceof TypeError) {
-                this.#logError(`[OpMapper] ${error.name}: ${error.message}`);
-            } else if (error instanceof RangeError) {
-                this.#logError(`[OpMapper] ${error.name}: ${error.message}`);
-                if (! strictMode) {
-                    if (operationsSequence === undefined) {
-                        operationsSequence = this.#operationsSequence;
-                    }
+            caughtErrors = true;
+            this.#logError(`[OpMapper] ${error.name}: ${error.message}`);
+        } finally {
+            if (! caughtErrors || (caughtErrors && ! this.strictMode)) {
+                if (operationsSequence_isUndefined) {
+                    this.#executeOperationsSequenceFromData();
+                } else {
                     this.#executeOperationsSequence(operationsSequence);
                 }
             }
@@ -206,11 +351,46 @@ export default class OpMapper {
             if (operation) {
                 const args = [];
                 for (let j = i+1; j < operationsSequence.length; j++) {
-                    const value = this.valuesStore[operationsSequence.charCodeAt(j)];
+                    const valueCharCode = operationsSequence.charCodeAt(j);
+                    const value = this.valuesStore[valueCharCode];
                     if (value) {
                         args.push(value);
                     } else {
-                        args.push(undefined);
+                        if (this.operationsStore[valueCharCode]) {
+                            break;
+                        } else {
+                            args.push(undefined);
+                        }
+                    }
+                }
+                operation(...args);
+            }
+        }
+    }
+
+    /**
+     * Attempts to execute the provided operations sequence from the operations sequence data array.
+     * 
+     * @private
+     * @method executeOperationsSequenceFromData
+     */
+    #executeOperationsSequenceFromData() {
+        for (let i = 0; i < this.#operationsSequenceData.length; i++) {
+            const operationCharCode = this.#operationsSequenceData[i].operation;
+            const operation = this.operationsStore[operationCharCode];
+            if (operation) {
+                const args = [];
+                for (let j = 0; j < this.#operationsSequenceData[i].values.length; j++) {
+                    const valueCharCode = this.#operationsSequenceData[i].values[j];
+                    const value = this.valuesStore[valueCharCode];
+                    if (value) {
+                        args.push(value);
+                    } else {
+                        if (this.operationsStore[valueCharCode]) {
+                            break;
+                        } else {
+                            args.push(undefined);
+                        }
                     }
                 }
                 operation(...args);
@@ -233,23 +413,56 @@ export default class OpMapper {
      * @returns {number}
      */
     #getSymbolType(value) {
-        const isIntegerSymbol = /^\d+$/.test(value);
-        if (isIntegerSymbol) {
+        const value_isInteger = /^\d+$/.test(value);
+        if (value_isInteger) {
             return this.#symbolTypeInteger;
-        } else if (! isIntegerSymbol && typeof value === 'string') {
+        } else if (! value_isInteger && typeof value === 'string') {
             return this.#symbolTypeString;
         }
         return this.#symbolTypeInvalid;
     }
 
     /**
-     * Check whether the value is a valid store object with key-value pairs.
+     * Computes the character code of the provided value.
+     * 
+     * @param {*} value The value for which the character code should be computed.
+     * @returns {*} If the provided value is a string, the character code of the first position
+     *      of the string is computed; otherwise, the provided value is returned back.
+     */
+    #computeCharCode(value) {
+        if (this.#getSymbolType(value) === this.#symbolTypeString) {
+            return value.charCodeAt(0);
+        }
+        return value;
+    }
+
+    /**
+     * Computes an array of character codes given the provided values.
+     *
+     * @param {Array<*>} values The array of values for which character codes should be computed.
+     * @returns {Array<number|null>} An array of character codes. If a character code cannot be
+     *      computed, `null` will be used instead.
+     */
+    #computeCharCodes(values) {
+        return values.map((value) => {
+            const symbolType = this.#getSymbolType(value);
+            if (symbolType === this.#symbolTypeString) {
+                return value.charCodeAt(0);
+            } else if (symbolType === this.#symbolTypeInteger) {
+                return value;
+            }
+            return null;
+        });
+    }
+
+    /**
+     * Checks whether the value is a valid store object with key-value pairs.
      * 
      * @private
      * @method isValidStoreObject
      * 
      * @param {*} value The value to be checked.
-     * @param {string[]} [validKeys] The keys that the object may have. (default: any)
+     * @param {Array<string>} [validKeys] The keys that the object may have. (default: any)
      * @returns {boolean}
      */
     #isValidStoreObject(value, validKeys = []) {
@@ -269,19 +482,35 @@ export default class OpMapper {
     }
 
     /**
-     * Check whether the value is a valid maxOperationsSequenceLength number.
+     * Checks whether the value is withing the allowed character code range.
      * 
      * @private
-     * @method isValidMaxOperationsSequenceLength
+     * @method isCharCodeWithinRange
+     * 
+     * @param {number} value The value to be checked.
+     * @returns {boolean}
+     */
+    #isCharCodeWithinRange(value) {
+        return (
+            value >= this.#minCharCode
+            && value <= this.#maxCharCode
+        );
+    }
+
+    /**
+     * Check whether the value is a positive save integer.
+     * 
+     * @private
+     * @method isPositiveSafeInteger
      * 
      * @param {*} value The value to be checked.
      * @returns {boolean}
      */
-    #isValidMaxOperationsSequenceLength(value) {
+    #isPositiveSafeInteger(value) {
         return (
             typeof value === 'number'
-            && value > 0
             && Number.isSafeInteger(value)
+            && value > 0
         );
     }
 
@@ -328,25 +557,30 @@ export default class OpMapper {
      * @method validateArguments
      * 
      * @param {string} method The method for which the arguments should be checked.
-     * @param {Array} args The user provided arguments to the respective method that should be checked.
+     * @param {Array<*>} args The user provided arguments to the respective method that should be checked.
      * 
      * @throws {TypeError} If the arguments are of an invalid type:
      *      - `constructor`: If the `config` parameter is not a valid object with valid keys, or if the config object properties are of an invalid type.
-     *      - `registerOperation` and `registerValue`: If the `symbol` parameter is not a string or an integer.
+     *      - `insert`: If the `index` parameter is not a non-negative integer.
+     *      - `append`, `insert` and `prepend`: If the `values` parameter is not an array or an empty array.
+     *      - `remove`: If the `id` parameter is not a positive safe integer.
+     *      - `append`, `insert`, `prepend`, `registerOperation` and `registerValue`: If the `symbol` parameter is not a string or an integer.
      *      - `registerOperation`: If the `callback` parameter is not a function.
      *      - `registerValue`: If the `value` parameter is `undefined`.
      *      - `execute`: If the operations sequence of the current instance or the `operationsSequence` parameter is not a string.
      * 
      * @throws {SyntaxError} If the arguments have syntax errors:
-     *      - `registerOperation` and `registerValue`: If the `symbol` parameter is a string but not a single character.
+     *      - `append`, `insert` and `prepend`: If the `values` parameter contains invalid symbols.
+     *      - `append`, `insert`, `prepend`, `registerOperation` and `registerValue`: If the `symbol` parameter is a string but not a single character.
      * 
      * @throws {RangeError} If the arguments are out of valid range:
-     *      - `registerOperation` and `registerValue`: If the `symbol` parameter is an integer but out of range.
+     *      - `append`, `insert`, `prepend`, `registerOperation` and `registerValue`: If the `symbol` parameter is an integer but out of range.
      *      - `execute`: If the operations sequence of the current instance or the `operationsSequence` parameter exceeds the configured `maxOperationsSequenceLength`.
      * 
      * @returns {boolean}
      */
     #validateArguments(method, args) {
+        let introMsg;
         switch (method) {
             case 'constructor':
                 if (args[0] !== undefined) {
@@ -375,7 +609,7 @@ export default class OpMapper {
                         }
                         if (
                             typeof args[0].maxOperationsSequenceLength !== 'undefined'
-                            && ! this.#isValidMaxOperationsSequenceLength(args[0].maxOperationsSequenceLength)
+                            && ! this.#isPositiveSafeInteger(args[0].maxOperationsSequenceLength)
                         ) {
                             throw new TypeError(`The 'config.maxOperationsSequenceLength' property, if defined, must be a positive safe integer.`);
                         }
@@ -395,48 +629,102 @@ export default class OpMapper {
                 }
                 break;
 
+            case 'remove':
+                if (! this.#isPositiveSafeInteger(args[0])) {
+                    throw new TypeError(`Cannot remove operation with id '${args[0]}'. The id must be a positive safe integer.`);
+                }
+                break;
+
             case 'setOperationsSequence':
+                introMsg = `Cannot ${method} to '${args[0]}'. The `;
                 if (
                     typeof args[0] !== 'undefined'
                     && typeof args[0] !== 'string'
                 ) {
-                    throw new TypeError(`Unable to ${method} to '${args[0]}'. An operations sequence must be a string.`);
+                    throw new TypeError(`${introMsg}operations sequence must be a string.`);
                 }
                 if (
                     typeof args[0] === 'string'
                     && ! this.#isOperationsSequenceLengthWithinLimit(args[0])
                 ) {
-                    throw new RangeError(`Unable to ${method} to '${args[0]}'. The provided operations sequence exceeds the configured 'maxOperationsSequenceLength' of ${this.maxOperationsSequenceLength} characters.`);
+                    throw new RangeError(`${introMsg}provided operations sequence exceeds the configured 'maxOperationsSequenceLength' of ${this.maxOperationsSequenceLength} characters.`);
                 }
                 break;
 
+            case 'append':
+            case 'insert':
+            case 'prepend':
             case 'registerOperation':
             case 'registerValue':
+                /**
+                 * NOTE: For the 'insert' method, change the arguments order for easier validation.
+                 * The new order of the arguments will be: operation, values, index.
+                 */
+                if (method === 'insert') {
+                    args = [args[1], args[2], args[0]];
+                }
+                const method_isOpSeqAction = ['append', 'insert', 'prepend'].includes(method);
+                const afterMethodString = method_isOpSeqAction ? ' operation' : '';
+                introMsg = `Cannot ${method}${afterMethodString} with symbol '${args[0]}'`;
+                /**
+                 * NOTE: Validate the first argument of the 'insert' method here, because from a
+                 * developer's perspective, it is considered the first argument, and if it is
+                 * invalid, it should be the first to throw an error.
+                 */
+                if (method === 'insert') {
+                    const index_isNumber = typeof args[2] === 'number';
+                    if (! index_isNumber || (index_isNumber && args[2] < 0)) {
+                        throw new TypeError(`${introMsg} at index '${args[2]}'. The index must be a non-negative integer.`);
+                    }
+                }
+                const stringOrIntegerSymbolMsg = 'symbol must be a string or an integer.';
+                const singleCharacterSymbolMsg = 'string symbol must consist of a single character.';
+                const symbolRangeMsg = `integer symbol must be within the range of ${this.#minCharCode} and ${this.#maxCharCode}.`;
                 const symbolType = this.#getSymbolType(args[0]);
                 if (symbolType === this.#symbolTypeInvalid) {
-                    throw new TypeError(`Unable to ${method} with symbol '${args[0]}'. The symbol must be a string or an integer.`);
+                    throw new TypeError(`${introMsg}. The ${stringOrIntegerSymbolMsg}`);
                 }
-                if (
-                    symbolType === this.#symbolTypeString
-                    && args[0].length !== 1
-                ) {
-                    throw new SyntaxError(`Unable to ${method} with symbol '${args[0]}'. A string symbol must consist of a single character.`);
+                if (symbolType === this.#symbolTypeString && args[0].length !== 1) {
+                    throw new SyntaxError(`${introMsg}. A ${singleCharacterSymbolMsg}`);
                 } else if (
                     symbolType === this.#symbolTypeInteger
-                    && (
-                        args[0] < this.#minSymbolCharCode
-                        || args[0] > this.#maxSymbolCharCode
-                    )
+                    && ! this.#isCharCodeWithinRange(args[0])
                 ) {
-                    throw new RangeError(`Unable to ${method} with symbol '${args[0]}'. An integer symbol must be within the range of ${this.#minSymbolCharCode} and ${this.#maxSymbolCharCode}.`);
+                    throw new RangeError(`${introMsg}. An ${symbolRangeMsg}`);
+                }
+                if (method_isOpSeqAction) {
+                    if (args[1] !== undefined) {
+                        const values_isArray = Array.isArray(args[1]);
+                        if (! values_isArray || (values_isArray && args[1].length === 0)) {
+                            throw new TypeError(`${introMsg}. The 'values' parameter must be an non-empty array.`);
+                        }
+                        const afterIntroMsg = ` and values '${args[1]}'. The 'values' array contains an invalid symbol. Each `;
+                        for (let i = 0; i < args[1].length; i++) {
+                            const symbolType = this.#getSymbolType(args[1][i]);
+                            if (symbolType === this.#symbolTypeInvalid) {
+                                throw new TypeError(`${introMsg}${afterIntroMsg}${stringOrIntegerSymbolMsg}`);
+                            }
+                            if (
+                                symbolType === this.#symbolTypeString
+                                && args[1][i].length !== 1
+                            ) {
+                                throw new SyntaxError(`${introMsg}${afterIntroMsg}${singleCharacterSymbolMsg}`);
+                            } else if (
+                                symbolType === this.#symbolTypeInteger
+                                && ! this.#isCharCodeWithinRange(args[1][i])
+                            ) {
+                                throw new RangeError(`${introMsg}${afterIntroMsg}${symbolRangeMsg}`);
+                            }
+                        }
+                    }
                 }
                 if (method === 'registerOperation') {
                     if (typeof args[1] !== 'function') {
-                        throw new TypeError(`Unable to ${method} with symbol '${args[0]}'. The 'callback' parameter must be a function.`);
+                        throw new TypeError(`${introMsg}. The 'callback' parameter must be a function.`);
                     }
                 } else if (method === 'registerValue') {
                     if (typeof args[1] === 'undefined') {
-                        throw new TypeError(`Unable to ${method} with symbol '${args[0]}'. The 'value' parameter cannot be undefined.`);
+                        throw new TypeError(`${introMsg}. The 'value' parameter cannot be undefined.`);
                     }
                 }
                 break;
@@ -445,17 +733,18 @@ export default class OpMapper {
             case 'executeProvided':
                 const operationsSequenceType = method.substring(7).toLowerCase();
                 method = 'execute';
+                introMsg = `Cannot ${method} the ${operationsSequenceType} operations sequence '${args[0]}'. The `;
                 if (
                     typeof args[0] !== 'undefined'
                     && typeof args[0] !== 'string'
                 ) {
-                    throw new TypeError(`Unable to ${method} the ${operationsSequenceType} operations sequence '${args[0]}'. An operations sequence must be a string.`);
+                    throw new TypeError(`${introMsg}operations sequence must be a string.`);
                 }
                 if (
                     typeof args[0] === 'string'
                     && ! this.#isOperationsSequenceLengthWithinLimit(args[0])
                 ) {
-                    throw new RangeError(`Unable to ${method} the ${operationsSequenceType} operations sequence '${args[0]}'. The ${operationsSequenceType} operations sequence exceeds the configured 'maxOperationsSequenceLength' of ${this.maxOperationsSequenceLength} characters.`);
+                    throw new RangeError(`${introMsg}${operationsSequenceType} operations sequence exceeds the configured 'maxOperationsSequenceLength' of ${this.maxOperationsSequenceLength} characters.`);
                 }
                 break;
             
