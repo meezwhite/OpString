@@ -62,9 +62,7 @@ export default class OpString {
                     this.#registerOperations(config.operations);
                 }
                 if (typeof config.values !== 'undefined') {
-                    for (const [symbol, value] of Object.entries(config.values)) {
-                        this.registerValue(symbol, value);
-                    }
+                    this.#registerValues(config.values);
                 }
                 if (typeof config.maxSequenceLength !== 'undefined') {
                     this.maxSequenceLength = config.maxSequenceLength;
@@ -326,6 +324,32 @@ export default class OpString {
             }
         } catch (error) {
             this.#logError(error);
+        }
+    }
+
+    /**
+     * Registers the value mappings provided by the `values` object.
+     * 
+     * @param {Object} values - Object containing the value mappings to be registered.
+     */
+    registerValues(values) {
+        try {
+            this.#validateArguments('registerValues', arguments);
+            this.#registerValues(values);
+        } catch (error) {
+            this.#logError(error);
+        }
+    }
+
+    /**
+     * Registers the value mappings provided by the `values` object without re-validating
+     * the `values` object.
+     * 
+     * @param {Object} values - Object containing the value mappings to be registered.
+     */
+    #registerValues(values) {
+        for (const [symbol, callback] of Object.entries(values)) {
+            this.registerValue(symbol, callback);
         }
     }
 
@@ -781,6 +805,7 @@ export default class OpString {
                 break;
 
             case 'registerOperations':
+            case 'registerValues':
                 const registerParamName = method.substring(8).toLowerCase();
                 if (! this.#isValidStoreObject(args[0])) {
                     throw new TypeError(`Cannot ${method}, since the '${registerParamName}' parameter must be a non-empty plain object.`);
