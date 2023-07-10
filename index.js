@@ -8,14 +8,13 @@
 export default class OpString {
     version = '0.1.0';
 
+    #operationsSequence = '';
+    #operationsSequenceData = [];
     #operations = {};
     #values = {};
     maxOperationsSequenceLength;
     ignoreWarnings = false;
     strictMode = false;
-
-    #operationsSequence = '';
-    #operationsSequenceData = [];
     #nextOperationId = 1;
 
     #symbolTypeInvalid = 0;
