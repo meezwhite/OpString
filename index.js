@@ -675,13 +675,15 @@ export default class OpString {
      * @param {Array<*>} args - The user provided arguments to the respective method to be checked.
      * 
      * @throws {TypeError} If the arguments are of an invalid type:
-     *      - `constructor`: If the `config` parameter is not a valid object with valid keys, or if the config object properties are of an invalid type.
+     *      - `constructor`: If the `config` parameter is empty, not a plain object or doesn't have valid keys, or if the config object properties are of an invalid type.
      *      - `insert`: If the `index` parameter is not a non-negative integer.
      *      - `append`, `insert` and `prepend`: If the `values` parameter is not an array or an empty array.
      *      - `remove`: If the `id` parameter is not a positive safe integer.
      *      - `append`, `insert`, `prepend`, `registerOperation` and `registerValue`: If the `symbol` parameter is not a string or an integer.
      *      - `registerOperation`: If the `callback` parameter is not a function.
+     *      - `registerOperations`: If the `operations` parameter is empty or not a plain object.
      *      - `registerValue`: If the `value` parameter is `undefined`.
+     *      - `registerValues`: If the `values` parameter is empty or not a plain object.
      *      - `setMaxSequenceLength`: If the `maxSequenceLength` parameter is not a positive safe integer.
      *      - `execute`: If the character sequence of the current instance or the `sequence` parameter is not a string.
      * 
