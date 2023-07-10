@@ -752,7 +752,11 @@ export default class OpString {
             case 'executeProvided':
                 const operationsSequenceType = method.substring(7).toLowerCase();
                 method = 'execute';
-                introMsg = `Cannot ${method} the ${operationsSequenceType} operations sequence '${args[0]}'. The `;
+                if (this.strictMode) {
+                    introMsg = `Cannot ${method} the ${operationsSequenceType} operations sequence '${args[0]}'. The `;
+                } else {
+                    introMsg = `Executing the ${operationsSequenceType} operations sequence '${args[0]}' despite exceeded length. The `;
+                }
                 if (
                     typeof args[0] !== 'undefined'
                     && typeof args[0] !== 'string'
