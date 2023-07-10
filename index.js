@@ -259,16 +259,6 @@ export default class OpString {
     }
 
     /**
-     * Returns the configured `maxSequenceLength` value. If the `maxSequenceLength` has not been
-     * configured, `undefined` is returned.
-     * 
-     * @returns {number|undefined}
-     */
-    getMaxSequenceLength() {
-        return this.#maxSequenceLength;
-    }
-
-    /**
      * Returns the registered operations.
      * 
      * @returns {Object}
@@ -380,6 +370,30 @@ export default class OpString {
      */
     getValues() {
         return this.#values;
+    }
+
+    /**
+     * Returns the configured `maxSequenceLength` value. If the `maxSequenceLength` has not been
+     * configured, `undefined` is returned.
+     * 
+     * @returns {number|undefined}
+     */
+    getMaxSequenceLength() {
+        return this.#maxSequenceLength;
+    }
+
+    /**
+     * Sets the maximum allowed sequence limit.
+     * 
+     * @param {number} maxSequenceLength 
+     */
+    setMaxSequenceLength(maxSequenceLength) {
+        try {
+            this.#validateArguments('setMaxSequenceLength', arguments);
+            this.#maxSequenceLength = maxSequenceLength;
+        } catch (error) {
+            this.#logError(error);
+        }
     }
 
     /**
@@ -668,6 +682,7 @@ export default class OpString {
      *      - `append`, `insert`, `prepend`, `registerOperation` and `registerValue`: If the `symbol` parameter is not a string or an integer.
      *      - `registerOperation`: If the `callback` parameter is not a function.
      *      - `registerValue`: If the `value` parameter is `undefined`.
+     *      - `setMaxSequenceLength`: If the `maxSequenceLength` parameter is not a positive safe integer.
      *      - `execute`: If the character sequence of the current instance or the `sequence` parameter is not a string.
      * 
      * @throws {SyntaxError} If the arguments have syntax errors:
@@ -835,6 +850,12 @@ export default class OpString {
                 const registerParamName = method.substring(8).toLowerCase();
                 if (! this.#isValidStoreObject(args[0])) {
                     throw new TypeError(`Cannot ${method}, since the '${registerParamName}' parameter must be a non-empty plain object.`);
+                }
+                break;
+
+            case 'setMaxSequenceLength':
+                if (! this.#isPositiveSafeInteger(args[0])) {
+                    throw new TypeError(`Cannot ${method}, since the 'maxSequenceLength' parameter must be a positive safe integer.`);
                 }
                 break;
 
