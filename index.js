@@ -846,9 +846,9 @@ export default class OpString {
                 const sequenceType = method === 'executeProvided' ? 'provided' : '';
                 method = 'execute';
                 if (this.strictMode) {
-                    introMsg = `Cannot ${method} the${sequenceType} sequence '${args[0]}'. The `;
+                    introMsg = `Cannot ${method} the${sequenceType} sequence '${args[0]}'. The`;
                 } else {
-                    introMsg = `Executing the${sequenceType} sequence '${args[0]}' despite exceeded length. The `;
+                    introMsg = `Executing the${sequenceType} sequence '${args[0]}' despite exceeded length. The`;
                 }
                 if (
                     typeof args[0] !== 'undefined'
