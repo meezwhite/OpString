@@ -177,20 +177,6 @@ export default class OpString {
     }
 
     /**
-     * Computes the operations sequence from the operations sequence data array.
-     */
-    #computeOperationsSequence() {
-        let operationsSequence = '';
-        for (let i = 0; i < this.#operationsSequenceData.length; i++) {
-            operationsSequence += String.fromCharCode(this.#operationsSequenceData[i].operation);
-            for (let j = 0; j < this.#operationsSequenceData[i].values.length; j++) {
-                operationsSequence += String.fromCharCode(this.#operationsSequenceData[i].values[j]);
-            }
-        }
-        this.#operationsSequence = operationsSequence;
-    }
-
-    /**
      * Returns the operations sequence.
      * 
      * @returns {string}
@@ -396,6 +382,20 @@ export default class OpString {
                 operation(...args);
             }
         }
+    }
+
+    /**
+     * Computes the operations sequence from the operations sequence data array.
+     */
+    #computeOperationsSequence() {
+        let operationsSequence = '';
+        for (let i = 0; i < this.#operationsSequenceData.length; i++) {
+            operationsSequence += String.fromCharCode(this.#operationsSequenceData[i].operation);
+            for (let j = 0; j < this.#operationsSequenceData[i].values.length; j++) {
+                operationsSequence += String.fromCharCode(this.#operationsSequenceData[i].values[j]);
+            }
+        }
+        this.#operationsSequence = operationsSequence;
     }
 
     /**
