@@ -78,7 +78,7 @@ export default class OpString {
                 }
             }
         } catch (error) {
-            this.#logError(`[${this.constructor.name}] ${error.name}: ${error.message}`);
+            this.#logError(`${error.name}: ${error.message}`);
         }
     }
 
@@ -103,7 +103,7 @@ export default class OpString {
             this.#computeOperationsSequence();
             return operationId;
         } catch (error) {
-            this.#logError(`[${this.constructor.name}] ${error.name}: ${error.message}`);
+            this.#logError(`${error.name}: ${error.message}`);
         }
         return null;
     }
@@ -131,7 +131,7 @@ export default class OpString {
             this.#computeOperationsSequence();
             return operationId;
         } catch (error) {
-            this.#logError(`[${this.constructor.name}] ${error.name}: ${error.message}`);
+            this.#logError(`${error.name}: ${error.message}`);
         }
         return null;
     }
@@ -157,7 +157,7 @@ export default class OpString {
             this.#computeOperationsSequence();
             return operationId;
         } catch (error) {
-            this.#logError(`[${this.constructor.name}] ${error.name}: ${error.message}`);
+            this.#logError(`${error.name}: ${error.message}`);
         }
         return null;
     }
@@ -182,7 +182,7 @@ export default class OpString {
                 throw new ReferenceError(`Cannot remove operation with id ${id}, since not found.`);
             }
         } catch (error) {
-            this.#logError(`[${this.constructor.name}] ${error.name}: ${error.message}`);
+            this.#logError(`${error.name}: ${error.message}`);
             return false;
         }
         return true;
@@ -249,7 +249,7 @@ export default class OpString {
                 }
             }
         } catch (error) {
-            this.#logError(`[${this.constructor.name}] ${error.name}: ${error.message}`);
+            this.#logError(`${error.name}: ${error.message}`);
         }
     }
 
@@ -271,7 +271,7 @@ export default class OpString {
                 this.operationsStore[symbol] = callback;
             }
         } catch (error) {
-            this.#logError(`[${this.constructor.name}] ${error.name}: ${error.message}`);
+            this.#logError(`${error.name}: ${error.message}`);
         }
     }
 
@@ -293,7 +293,7 @@ export default class OpString {
                 this.valuesStore[symbol] = value;
             }
         } catch (error) {
-            this.#logError(`[${this.constructor.name}] ${error.name}: ${error.message}`);
+            this.#logError(`${error.name}: ${error.message}`);
         }
     }
 
@@ -317,7 +317,7 @@ export default class OpString {
             }
         } catch (error) {
             caughtErrors = true;
-            this.#logError(`[${this.constructor.name}] ${error.name}: ${error.message}`);
+            this.#logError(`${error.name}: ${error.message}`);
         } finally {
             if (! caughtErrors || (caughtErrors && ! this.strictMode)) {
                 if (operationsSequence_isUndefined) {
@@ -558,6 +558,7 @@ export default class OpString {
      * @param {string} error The error to be logged.
      */
     #logError(error) {
+        error = `[${this.constructor.name}] ${error}`;
         if (this.strictMode) {
             console.error(error);
         } else {
