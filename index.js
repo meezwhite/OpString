@@ -306,7 +306,7 @@ export default class OpString {
     }
 
     /**
-     * Registers the operation mappings provided by the `operations` object.
+     * Registers additional operation mappings provided by the `operations` object.
      * 
      * @param {Object} operations - Object containing the operation mappings to be registered.
      */
@@ -320,8 +320,8 @@ export default class OpString {
     }
 
     /**
-     * Registers the operation mappings provided by the `operations` object without re-validating
-     * the `operations` object.
+     * Registers additional operation mappings provided by the `operations` object without 
+     * re-validating the `operations` object.
      * 
      * @param {Object} operations - Object containing the operation mappings to be registered.
      */
@@ -354,7 +354,7 @@ export default class OpString {
     }
 
     /**
-     * Registers the value mappings provided by the `values` object.
+     * Registers additional value mappings provided by the `values` object.
      * 
      * @param {Object} values - Object containing the value mappings to be registered.
      */
@@ -368,7 +368,7 @@ export default class OpString {
     }
 
     /**
-     * Registers the value mappings provided by the `values` object without re-validating
+     * Registers additional value mappings provided by the `values` object without re-validating
      * the `values` object.
      * 
      * @param {Object} values - Object containing the value mappings to be registered.
