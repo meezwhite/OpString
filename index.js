@@ -8,11 +8,11 @@
 export default class OpString {
     version = '0.1.0';
 
-    #operationsSequence = '';
-    #operationsSequenceData = [];
+    #operationSequence = '';
+    #operationSequenceData = [];
     #operations = {};
     #values = {};
-    maxOperationsSequenceLength;
+    maxOperationSequenceLength;
     ignoreWarnings = false;
     strictMode = false;
     #nextOperationId = 1;
@@ -25,10 +25,10 @@ export default class OpString {
     #maxCharCode = 65535;
 
     #validConfigKeys = [
-        'operationsSequence',
+        'operationSequence',
         'operations',
         'values',
-        'maxOperationsSequenceLength',
+        'maxOperationSequenceLength',
         'ignoreWarnings',
         'strictMode',
     ];
@@ -37,17 +37,17 @@ export default class OpString {
      * Creates an instance of OpString.
      * 
      * @param {Object} [config] - Config object to configure OpString features.
-     * @param {string} [config.operationsSequence] - Main operations sequence that should be executed
-     *      when `execute` is called without providing the `operationsSequence` parameter. (default: '')
+     * @param {string} [config.operationSequence] - Main operation sequence that should be executed
+     *      when `execute` is called without providing the `operationSequence` parameter. (default: '')
      * @param {Object} [config.operations] - Initial object storing operation mappings. (default: {})
      * @param {Object} [config.values] - Initial object storing value mappings. (default: {})
-     * @param {number} [config.maxOperationsSequenceLength] - Specifies a maximum allowed operations
+     * @param {number} [config.maxOperationSequenceLength] - Specifies a maximum allowed operations
      *      sequence length. If defined, it must be a positive safe integer. (default: undefined)
      * @param {boolean} [config.ignoreWarnings] - Specifies whether warnings should be ignored. (default: false)
      * @param {boolean} [config.strictMode] - Specifies the behavior of the library with regard to errors.
      *      If set to `true`, errors will be logged; otherwise, warnings will be logged. Furthermore,
-     *      if set to `true` the `maxOperationsSequenceLength` must be adhered to, otherwise, the
-     *      respective operations sequence will not be executed. (default: false)
+     *      if set to `true` the `maxOperationSequenceLength` must be adhered to, otherwise, the
+     *      respective operation sequence will not be executed. (default: false)
      */
     constructor(config) {
         try {
@@ -63,11 +63,11 @@ export default class OpString {
                         this.registerValue(symbol, value);
                     }
                 }
-                if (typeof config.maxOperationsSequenceLength !== 'undefined') {
-                    this.maxOperationsSequenceLength = config.maxOperationsSequenceLength;
+                if (typeof config.maxOperationSequenceLength !== 'undefined') {
+                    this.maxOperationSequenceLength = config.maxOperationSequenceLength;
                 }
-                if (typeof config.operationsSequence !== 'undefined') {
-                    this.setOperationsSequence(config.operationsSequence);
+                if (typeof config.operationSequence !== 'undefined') {
+                    this.setOperationSequence(config.operationSequence);
                 }
                 if (typeof config.ignoreWarnings === 'boolean') {
                     this.ignoreWarnings = config.ignoreWarnings;
@@ -82,7 +82,7 @@ export default class OpString {
     }
 
     /**
-     * Appends an operation and corresponding values to the operations sequence.
+     * Appends an operation and corresponding values to the operation sequence.
      * 
      * @param {string|number} operation - The character code of the operation to be appended.
      * @param {Array<string|number>} [values] - An array with the characters or character
@@ -93,7 +93,7 @@ export default class OpString {
         const operationId = this.#nextOperationId;
         try {
             this.#validateArguments('append', arguments);
-            this.#operationsSequenceData.push({
+            this.#operationSequenceData.push({
                 id: operationId,
                 operation: this.#computeCharCode(operation),
                 values: this.#computeCharCodes(values),
@@ -108,7 +108,7 @@ export default class OpString {
     }
 
     /**
-     * Adds an operation and corresponding values to the operations sequence at 
+     * Adds an operation and corresponding values to the operation sequence at 
      * the specified index.
      * 
      * @param {number} index - The index at which the operation should be added.
@@ -121,7 +121,7 @@ export default class OpString {
         const operationId = this.#nextOperationId;
         try {
             this.#validateArguments('add', arguments);
-            this.#operationsSequenceData.splice(index, 0, {
+            this.#operationSequenceData.splice(index, 0, {
                 id: operationId,
                 operation: this.#computeCharCode(operation),
                 values: this.#computeCharCodes(values),
@@ -136,7 +136,7 @@ export default class OpString {
     }
 
     /**
-     * Prepends an operation and corresponding values to the operations sequence.
+     * Prepends an operation and corresponding values to the operation sequence.
      * 
      * @param {string|number} operation The character code of the operation to be prepended.
      * @param {Array<string|number>} [values] An array with the character codes of the values
@@ -147,7 +147,7 @@ export default class OpString {
         const operationId = this.#nextOperationId;
         try {
             this.#validateArguments('prepend', arguments);
-            this.#operationsSequenceData.unshift({
+            this.#operationSequenceData.unshift({
                 id: operationId,
                 operation: this.#computeCharCode(operation),
                 values: this.#computeCharCodes(values),
@@ -162,7 +162,7 @@ export default class OpString {
     }
 
     /**
-     * Removes the operation with the specified id from the operations sequence.
+     * Removes the operation with the specified id from the operation sequence.
      * 
      * @param {number} id The id of the operation that should be removed.
      * 
@@ -173,9 +173,9 @@ export default class OpString {
     remove(id) {
         try {
             this.#validateArguments('remove', arguments);
-            const index = this.#operationsSequenceData.findIndex(operation => operation.id === id);
+            const index = this.#operationSequenceData.findIndex(operation => operation.id === id);
             if (index !== -1) {
-                this.#operationsSequenceData.splice(index, 1);
+                this.#operationSequenceData.splice(index, 1);
                 this.#computeOperationsSequence();
             } else {
                 throw new ReferenceError(`Cannot remove operation with id ${id}, since not found.`);
@@ -188,42 +188,42 @@ export default class OpString {
     }
 
     /**
-     * Returns the operations sequence.
+     * Returns the operation sequence.
      * 
      * @returns {string}
      */
-    getOperationsSequence() {
-        return this.#operationsSequence;
+    getOperationSequence() {
+        return this.#operationSequence;
     }
 
     /**
-     * Returns the operations sequence data array.
+     * Returns the operation sequence data array.
      * 
      * @returns {Array<Object>}
      */
-    getOperationsSequenceData() {
-        return this.#operationsSequenceData;
+    getOperationSequenceData() {
+        return this.#operationSequenceData;
     }
 
     /**
-     * Sets the operations sequence.
+     * Sets the operation sequence.
      * 
-     * @method setOperationsSequence
+     * @method setOperationSequence
      * 
-     * @param {string} operationsSequence The operations sequence that should be set.
+     * @param {string} operationSequence The operation sequence that should be set.
      */
-    setOperationsSequence(operationsSequence) {
+    setOperationSequence(operationSequence) {
         try {
-            this.#validateArguments('setOperationsSequence', arguments);
-            this.#operationsSequence = operationsSequence;
-            this.#operationsSequenceData = [];
-            for (let i = 0; i < operationsSequence.length; i++) {
-                const operationCharCode = operationsSequence.charCodeAt(i);
+            this.#validateArguments('setOperationSequence', arguments);
+            this.#operationSequence = operationSequence;
+            this.#operationSequenceData = [];
+            for (let i = 0; i < operationSequence.length; i++) {
+                const operationCharCode = operationSequence.charCodeAt(i);
                 const operation = this.#operations[operationCharCode];
                 if (operation) {
                     const args = [];
-                    for (let j = i+1; j < operationsSequence.length; j++) {
-                        const valueCharCode = operationsSequence.charCodeAt(j);
+                    for (let j = i+1; j < operationSequence.length; j++) {
+                        const valueCharCode = operationSequence.charCodeAt(j);
                         const value = this.#values[valueCharCode];
                         if (value) {
                             args.push(valueCharCode);
@@ -240,7 +240,7 @@ export default class OpString {
                             }
                         }
                     }
-                    this.#operationsSequenceData.push({
+                    this.#operationSequenceData.push({
                         id: this.#nextOperationId++,
                         operation: operationCharCode,
                         values: args,
@@ -297,20 +297,20 @@ export default class OpString {
     }
 
     /**
-     * Attempts to execute the operations sequence of the current instance or a provided
-     * operations sequence specified by the `operationsSequence` parameter.
+     * Attempts to execute the operation sequence of the current instance or a provided
+     * operation sequence specified by the `operationSequence` parameter.
      * 
      * @method execute
      * 
-     * @param {string} [operationsSequence] The operations sequence to be executed
-     *      instead of the operations sequence of the current instance.
+     * @param {string} [operationSequence] The operation sequence to be executed
+     *      instead of the operation sequence of the current instance.
      */
-    execute(operationsSequence) {
-        const operationsSequence_isUndefined = operationsSequence === undefined;
+    execute(operationSequence) {
+        const operationSequence_isUndefined = operationSequence === undefined;
         let caughtErrors = false;
         try {
-            if (operationsSequence_isUndefined) {
-                this.#validateArguments('executeMain', [this.#operationsSequence]);
+            if (operationSequence_isUndefined) {
+                this.#validateArguments('executeMain', [this.#operationSequence]);
             } else {
                 this.#validateArguments('executeProvided', arguments);
             }
@@ -319,33 +319,33 @@ export default class OpString {
             this.#logError(`${error.name}: ${error.message}`);
         } finally {
             if (! caughtErrors || (caughtErrors && ! this.strictMode)) {
-                if (operationsSequence_isUndefined) {
+                if (operationSequence_isUndefined) {
                     this.#executeOperationsSequenceFromData();
                 } else {
-                    this.#executeOperationsSequence(operationsSequence);
+                    this.#executeOperationsSequence(operationSequence);
                 }
             }
         }
     }
 
     /**
-     * Attempts to execute the provided operations sequence.
+     * Attempts to execute the provided operation sequence.
      * 
      * @private
      * @method executeOperationsSequence
      * 
-     * @param {string} operationsSequence The operations sequence to be executed.
+     * @param {string} operationSequence The operation sequence to be executed.
      */
-    #executeOperationsSequence(operationsSequence) {
-        if (typeof operationsSequence !== 'string') {
-            operationsSequence = '';
+    #executeOperationsSequence(operationSequence) {
+        if (typeof operationSequence !== 'string') {
+            operationSequence = '';
         }
-        for (let i = 0; i < operationsSequence.length; i++) {
-            const operation = this.#operations[operationsSequence.charCodeAt(i)];
+        for (let i = 0; i < operationSequence.length; i++) {
+            const operation = this.#operations[operationSequence.charCodeAt(i)];
             if (operation) {
                 const args = [];
-                for (let j = i+1; j < operationsSequence.length; j++) {
-                    const valueCharCode = operationsSequence.charCodeAt(j);
+                for (let j = i+1; j < operationSequence.length; j++) {
+                    const valueCharCode = operationSequence.charCodeAt(j);
                     const value = this.#values[valueCharCode];
                     if (value) {
                         args.push(value);
@@ -363,19 +363,19 @@ export default class OpString {
     }
 
     /**
-     * Attempts to execute the provided operations sequence from the operations sequence data array.
+     * Attempts to execute the provided operation sequence from the operation sequence data array.
      * 
      * @private
      * @method executeOperationsSequenceFromData
      */
     #executeOperationsSequenceFromData() {
-        for (let i = 0; i < this.#operationsSequenceData.length; i++) {
-            const operationCharCode = this.#operationsSequenceData[i].operation;
+        for (let i = 0; i < this.#operationSequenceData.length; i++) {
+            const operationCharCode = this.#operationSequenceData[i].operation;
             const operation = this.#operations[operationCharCode];
             if (operation) {
                 const args = [];
-                for (let j = 0; j < this.#operationsSequenceData[i].values.length; j++) {
-                    const valueCharCode = this.#operationsSequenceData[i].values[j];
+                for (let j = 0; j < this.#operationSequenceData[i].values.length; j++) {
+                    const valueCharCode = this.#operationSequenceData[i].values[j];
                     const value = this.#values[valueCharCode];
                     if (value) {
                         args.push(value);
@@ -393,17 +393,17 @@ export default class OpString {
     }
 
     /**
-     * Computes the operations sequence from the operations sequence data array.
+     * Computes the operation sequence from the operation sequence data array.
      */
     #computeOperationsSequence() {
-        let operationsSequence = '';
-        for (let i = 0; i < this.#operationsSequenceData.length; i++) {
-            operationsSequence += String.fromCharCode(this.#operationsSequenceData[i].operation);
-            for (let j = 0; j < this.#operationsSequenceData[i].values.length; j++) {
-                operationsSequence += String.fromCharCode(this.#operationsSequenceData[i].values[j]);
+        let operationSequence = '';
+        for (let i = 0; i < this.#operationSequenceData.length; i++) {
+            operationSequence += String.fromCharCode(this.#operationSequenceData[i].operation);
+            for (let j = 0; j < this.#operationSequenceData[i].values.length; j++) {
+                operationSequence += String.fromCharCode(this.#operationSequenceData[i].values[j]);
             }
         }
-        this.#operationsSequence = operationsSequence;
+        this.#operationSequence = operationSequence;
     }
 
     /**
@@ -532,19 +532,19 @@ export default class OpString {
     }
 
     /**
-     * Checks whether the provided operations sequence is within the configured limit.
-     * If `maxOperationsSequenceLength` has not been configured, return `true`.
+     * Checks whether the provided operation sequence is within the configured limit.
+     * If `maxOperationSequenceLength` has not been configured, return `true`.
      * 
      * @private
      * @method isOperationsSequenceLengthWithinLimit
      * 
-     * @param {string} operationsSequence The operations sequence to be checked.
+     * @param {string} operationSequence The operation sequence to be checked.
      * @returns {boolean}
      */
-    #isOperationsSequenceLengthWithinLimit(operationsSequence) {
+    #isOperationsSequenceLengthWithinLimit(operationSequence) {
         if (
-            this.maxOperationsSequenceLength !== undefined
-            && operationsSequence.length > this.maxOperationsSequenceLength
+            this.maxOperationSequenceLength !== undefined
+            && operationSequence.length > this.maxOperationSequenceLength
         ) {
             return false;
         }
@@ -585,7 +585,7 @@ export default class OpString {
      *      - `append`, `insert`, `prepend`, `registerOperation` and `registerValue`: If the `symbol` parameter is not a string or an integer.
      *      - `registerOperation`: If the `callback` parameter is not a function.
      *      - `registerValue`: If the `value` parameter is `undefined`.
-     *      - `execute`: If the operations sequence of the current instance or the `operationsSequence` parameter is not a string.
+     *      - `execute`: If the operation sequence of the current instance or the `operationSequence` parameter is not a string.
      * 
      * @throws {SyntaxError} If the arguments have syntax errors:
      *      - `append`, `insert` and `prepend`: If the `values` parameter contains invalid symbols.
@@ -593,7 +593,7 @@ export default class OpString {
      * 
      * @throws {RangeError} If the arguments are out of valid range:
      *      - `append`, `insert`, `prepend`, `registerOperation` and `registerValue`: If the `symbol` parameter is an integer but out of range.
-     *      - `execute`: If the operations sequence of the current instance or the `operationsSequence` parameter exceeds the configured `maxOperationsSequenceLength`.
+     *      - `execute`: If the operation sequence of the current instance or the `operationSequence` parameter exceeds the configured `maxOperationSequenceLength`.
      * 
      * @returns {boolean}
      */
@@ -608,10 +608,10 @@ export default class OpString {
                         throw new TypeError(`The 'config' parameter, if defined, must be a non-empty plain object with valid 'config' properties; these are ${validConfigKeysStr} and '${lastValidConfigKey}'.`);
                     } else {
                         if (
-                            typeof args[0].operationsSequence !== 'undefined'
-                            && typeof args[0].operationsSequence !== 'string'
+                            typeof args[0].operationSequence !== 'undefined'
+                            && typeof args[0].operationSequence !== 'string'
                         ) {
-                            throw new TypeError(`The 'config.operationsSequence' property, if defined, must be a string.`);
+                            throw new TypeError(`The 'config.operationSequence' property, if defined, must be a string.`);
                         }
                         if (
                             typeof args[0].operations !== 'undefined'
@@ -626,10 +626,10 @@ export default class OpString {
                             throw new TypeError(`The 'config.values' property, if defined, must be a non-empty plain object`);
                         }
                         if (
-                            typeof args[0].maxOperationsSequenceLength !== 'undefined'
-                            && ! this.#isPositiveSafeInteger(args[0].maxOperationsSequenceLength)
+                            typeof args[0].maxOperationSequenceLength !== 'undefined'
+                            && ! this.#isPositiveSafeInteger(args[0].maxOperationSequenceLength)
                         ) {
-                            throw new TypeError(`The 'config.maxOperationsSequenceLength' property, if defined, must be a positive safe integer.`);
+                            throw new TypeError(`The 'config.maxOperationSequenceLength' property, if defined, must be a positive safe integer.`);
                         }
                         if (
                             typeof args[0].ignoreWarnings !== 'undefined'
@@ -653,19 +653,19 @@ export default class OpString {
                 }
                 break;
 
-            case 'setOperationsSequence':
+            case 'setOperationSequence':
                 introMsg = `Cannot ${method} to '${args[0]}'. The `;
                 if (
                     typeof args[0] !== 'undefined'
                     && typeof args[0] !== 'string'
                 ) {
-                    throw new TypeError(`${introMsg}operations sequence must be a string.`);
+                    throw new TypeError(`${introMsg}operation sequence must be a string.`);
                 }
                 if (
                     typeof args[0] === 'string'
                     && ! this.#isOperationsSequenceLengthWithinLimit(args[0])
                 ) {
-                    throw new RangeError(`${introMsg}provided operations sequence exceeds the configured 'maxOperationsSequenceLength' of ${this.maxOperationsSequenceLength} characters.`);
+                    throw new RangeError(`${introMsg}provided operation sequence exceeds the configured 'maxOperationSequenceLength' of ${this.maxOperationSequenceLength} characters.`);
                 }
                 break;
 
@@ -749,24 +749,24 @@ export default class OpString {
 
             case 'executeMain':
             case 'executeProvided':
-                const operationsSequenceType = method.substring(7).toLowerCase();
+                const operationSequenceType = method.substring(7).toLowerCase();
                 method = 'execute';
                 if (this.strictMode) {
-                    introMsg = `Cannot ${method} the ${operationsSequenceType} operations sequence '${args[0]}'. The `;
+                    introMsg = `Cannot ${method} the ${operationSequenceType} operation sequence '${args[0]}'. The `;
                 } else {
-                    introMsg = `Executing the ${operationsSequenceType} operations sequence '${args[0]}' despite exceeded length. The `;
+                    introMsg = `Executing the ${operationSequenceType} operation sequence '${args[0]}' despite exceeded length. The `;
                 }
                 if (
                     typeof args[0] !== 'undefined'
                     && typeof args[0] !== 'string'
                 ) {
-                    throw new TypeError(`${introMsg}operations sequence must be a string.`);
+                    throw new TypeError(`${introMsg}operation sequence must be a string.`);
                 }
                 if (
                     typeof args[0] === 'string'
                     && ! this.#isOperationsSequenceLengthWithinLimit(args[0])
                 ) {
-                    throw new RangeError(`${introMsg}${operationsSequenceType} operations sequence exceeds the configured 'maxOperationsSequenceLength' of ${this.maxOperationsSequenceLength} characters.`);
+                    throw new RangeError(`${introMsg}${operationSequenceType} operation sequence exceeds the configured 'maxOperationSequenceLength' of ${this.maxOperationSequenceLength} characters.`);
                 }
                 break;
             
