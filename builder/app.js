@@ -1,6 +1,6 @@
 import Alpine from './../node_modules/alpinejs/dist/module.esm.js';
 import OpString from './../index.js';
-// import { operationsStore, valuesStore } from './OpStringStore.js';
+// import { operations, values } from './OpStringStore.js';
 
 window.Alpine = Alpine;
 window.OpString = OpString;
@@ -10,7 +10,7 @@ document.addEventListener('alpine:init', () => {
 
     Alpine.data('OpStringBuilder', () => ({
         init() {
-            const operationsStore = {
+            const operations = {
                 'A': (x, y, d) => {
                     console.log(`circle(${x}, ${y}, ${d})`);
                 },
@@ -18,17 +18,17 @@ document.addEventListener('alpine:init', () => {
                     console.log(`rect(${x}, ${y}, ${w}, ${h})`);
                 },
             };
-            const valuesStore = {
+            const values = {
                 'a': 30,
                 'b': 20,
                 'c': 55,
             };
             opString = new OpString({
-                operationsSequence: 'AaabBaaGccAbba',
-                operationsStore,
-                valuesStore,
+                sequence: 'AaabBaaGccAbba',
+                operations,
+                values,
             });
-            console.debug(opString.getOperationsSequenceData());
+            console.debug(opString);
 
             opString.execute();
             // opString.execute('Aaac');
@@ -46,16 +46,16 @@ document.addEventListener('alpine:init', () => {
             console.debug('storeValuesRange');
         },
 
-        operationsStore() {
-            return opString.operationsStore;
+        operations() {
+            return opString.operations;
         },
 
-        valuesStore() {
-            return opString.valuesStore;
+        values() {
+            return opString.values;
         },
 
-        operationsSequence() {
-            return opString.getOperationsSequence();
+        sequence() {
+            return opString.sequence;
         },
     }));
 });
