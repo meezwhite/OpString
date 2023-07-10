@@ -246,12 +246,6 @@ export default class OpString {
                         operation: operationCharCode,
                         values: args,
                     });
-                } else {
-                    /**
-                     * NOTE: Register unknown operation symbols with an empty callback function.
-                     * Enables handling of unknown operation symbols appropriately.
-                     */
-                    this.registerOperation(operationCharCode, () => {});
                 }
             }
         } catch (error) {
