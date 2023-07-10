@@ -258,6 +258,15 @@ export default class OpString {
     }
 
     /**
+     * Returns the registered operations.
+     * 
+     * @returns {Object}
+     */
+    getOperations() {
+        return this.#operations;
+    }
+
+    /**
      * Registers an operation mapping.
      * 
      * @method registerOperation
