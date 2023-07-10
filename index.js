@@ -459,15 +459,18 @@ export default class OpString {
      *      computed, `null` will be used instead.
      */
     #computeCharCodes(values) {
-        return values.map((value) => {
-            const symbolType = this.#getSymbolType(value);
-            if (symbolType === this.#symbolTypeString) {
-                return value.charCodeAt(0);
-            } else if (symbolType === this.#symbolTypeInteger) {
-                return value;
-            }
-            return null;
-        });
+        if (values !== undefined) {
+            return values.map((value) => {
+                const symbolType = this.#getSymbolType(value);
+                if (symbolType === this.#symbolTypeString) {
+                    return value.charCodeAt(0);
+                } else if (symbolType === this.#symbolTypeInteger) {
+                    return value;
+                }
+                return null;
+            });
+        }
+        return [];
     }
 
     /**
