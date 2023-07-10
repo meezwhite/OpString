@@ -43,7 +43,7 @@ export default class OpString {
      *      called without providing a `sequence` parameter. (default: '')
      * @param {Object} [config.operations] - Object containing the operation mappings to be
      *      registered. (default: {})
-     * @param {Object} [config.values] - Object containing the value mappings to be 
+     * @param {Object} [config.values] - Object containing the value mappings to be
      *      registered. (default: {})
      * @param {number} [config.maxSequenceLength] - Specifies a maximum allowed sequence length.
      *      If defined, it must be a positive safe integer. (default: undefined)
@@ -118,8 +118,9 @@ export default class OpString {
      * index and computes the character sequence.
      * 
      * @param {number} index - The index at which the operation should be added.
-     * @param {string|number} operation - The character or character code of the operation to be added.
-     * @param {Array<string|number>} [values] - An array with the characters or character codes of 
+     * @param {string|number} operation - The character or character code of the operation to be
+     *      added.
+     * @param {Array<string|number>} [values] - An array with the characters or character codes of
      *      the values corresponding to the operation to be added.
      * @returns {number|null} The id of the inserted operation.
      */
@@ -145,8 +146,8 @@ export default class OpString {
      * Prepends an operation and the corresponding values to the sequence data array and computes
      * the character sequence.
      * 
-     * @param {string|number} operation The character code of the operation to be prepended.
-     * @param {Array<string|number>} [values] An array with the character codes of the values
+     * @param {string|number} operation - The character code of the operation to be prepended.
+     * @param {Array<string|number>} [values] - An array with the character codes of the values
      *      corresponding to the operation to be prepended.
      * @returns {number|null} The id of the prepended operation.
      */
@@ -172,7 +173,7 @@ export default class OpString {
      * Removes the operation with the specified id from the sequence data array and computes the
      * character sequence.
      * 
-     * @param {number} id The id of the operation that should be removed.
+     * @param {number} id - The id of the operation that should be removed.
      * 
      * @throws {ReferenceError} If there is no operation with the specified id.
      * 
@@ -218,7 +219,7 @@ export default class OpString {
      * 
      * @method setSequence
      * 
-     * @param {string} sequence The character sequence that should be set.
+     * @param {string} sequence - The character sequence that should be set.
      */
     setSequence(sequence) {
         try {
@@ -265,8 +266,8 @@ export default class OpString {
      * 
      * @method registerOperation
      * 
-     * @param {string|number} symbol The character or character code that should be mapped to a function.
-     * @param {function} callback The function that the symbol should be mapped to.
+     * @param {string|number} symbol - The character or character code to be mapped to a function.
+     * @param {function} callback - The function to which the symbol should be mapped to.
      */
     registerOperation(symbol, callback) {
         try {
@@ -287,8 +288,8 @@ export default class OpString {
      * 
      * @method registerValue
      * 
-     * @param {string|number} symbol The character or character code that should be mapped to a value.
-     * @param {*} value The value that the symbol should be mapped to.
+     * @param {string|number} symbol - The character or character code to be mapped to a value.
+     * @param {*} value - The value to which the symbol should be mapped to.
      */
     registerValue(symbol, value) {
         try {
@@ -310,7 +311,7 @@ export default class OpString {
      * 
      * @method execute
      * 
-     * @param {string} [sequence] The character sequence to be executed instead of
+     * @param {string} [sequence] - The character sequence to be executed instead of
      *      the character sequence of the current instance.
      */
     execute(sequence) {
@@ -342,7 +343,7 @@ export default class OpString {
      * @private
      * @method executeSequence
      * 
-     * @param {string} sequence The character sequence to be executed.
+     * @param {string} sequence - The character sequence to be executed.
      */
     #executeSequence(sequence) {
         if (typeof sequence !== 'string') {
@@ -425,7 +426,7 @@ export default class OpString {
      * @private
      * @method getSymbolType
      * 
-     * @param {*} value The value for which the symbol type should be determined.
+     * @param {*} value - The value for which the symbol type should be determined.
      * @returns {number}
      */
     #getSymbolType(value) {
@@ -444,7 +445,7 @@ export default class OpString {
      * @private
      * @method computeCharCode
      * 
-     * @param {*} value The value for which the character code should be computed.
+     * @param {*} value - The value for which the character code should be computed.
      * @returns {*} If the provided value is a string, the character code of the first position
      *      of the string is computed; otherwise, the provided value is returned back.
      */
@@ -461,7 +462,7 @@ export default class OpString {
      * @private
      * @method computeCharCodes
      * 
-     * @param {Array<*>} values The array of values for which character codes should be computed.
+     * @param {Array<*>} values - The array of values for which character codes should be computed.
      * @returns {Array<number|null>} An array of character codes. If a character code cannot be
      *      computed, `null` will be used instead.
      */
@@ -486,8 +487,8 @@ export default class OpString {
      * @private
      * @method isValidStoreObject
      * 
-     * @param {*} value The value to be checked.
-     * @param {Array<string>} [validKeys] The keys that the object may have. (default: any)
+     * @param {*} value - The value to be checked.
+     * @param {Array<string>} [validKeys] - The keys that the object may have. (default: [])
      * @returns {boolean}
      */
     #isValidStoreObject(value, validKeys = []) {
@@ -512,7 +513,7 @@ export default class OpString {
      * @private
      * @method isCharCodeWithinRange
      * 
-     * @param {number} value The value to be checked.
+     * @param {number} value - The value to be checked.
      * @returns {boolean}
      */
     #isCharCodeWithinRange(value) {
@@ -528,7 +529,7 @@ export default class OpString {
      * @private
      * @method isPositiveSafeInteger
      * 
-     * @param {*} value The value to be checked.
+     * @param {*} value - The value to be checked.
      * @returns {boolean}
      */
     #isPositiveSafeInteger(value) {
@@ -540,13 +541,13 @@ export default class OpString {
     }
 
     /**
-     * Checks whether the provided character sequence is within the configured `maxSequenceLength` limit.
-     * If `maxSequenceLength` has not been configured, return `true`.
+     * Checks whether the provided character sequence is within the configured `maxSequenceLength`
+     * limit. If `maxSequenceLength` has not been configured, return `true`.
      * 
      * @private
      * @method isSequenceLengthWithinLimit
      * 
-     * @param {string} sequence The character sequence to be checked.
+     * @param {string} sequence - The character sequence to be checked.
      * @returns {boolean}
      */
     #isSequenceLengthWithinLimit(sequence) {
@@ -562,7 +563,7 @@ export default class OpString {
     /**
      * Logs the provided error based on the current `strictMode` configuration.
      * 
-     * @param {string} error The error to be logged.
+     * @param {TypeError|SyntaxError|RangeError|ReferenceError} error - The error to be logged.
      */
     #logError(error) {
         error = `[${this.constructor.name}] ${error.name}: ${error.message}`;
@@ -582,8 +583,8 @@ export default class OpString {
      * @private
      * @method validateArguments
      * 
-     * @param {string} method The method for which the arguments should be checked.
-     * @param {Array<*>} args The user provided arguments to the respective method that should be checked.
+     * @param {string} method - The method for which the arguments should be checked.
+     * @param {Array<*>} args - The user provided arguments to the respective method to be checked.
      * 
      * @throws {TypeError} If the arguments are of an invalid type:
      *      - `constructor`: If the `config` parameter is not a valid object with valid keys, or if the config object properties are of an invalid type.
