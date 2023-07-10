@@ -12,7 +12,7 @@ export default class OpString {
     #sequenceData = [];
     #operations = {};
     #values = {};
-    maxSequenceLength;
+    #maxSequenceLength;
     ignoreWarnings = false;
     strictMode = false;
 
@@ -66,7 +66,7 @@ export default class OpString {
                     this.#registerValues(config.values);
                 }
                 if (typeof config.maxSequenceLength !== 'undefined') {
-                    this.maxSequenceLength = config.maxSequenceLength;
+                    this.#maxSequenceLength = config.maxSequenceLength;
                 }
                 if (typeof config.sequence !== 'undefined') {
                     this.setSequence(config.sequence);
@@ -256,6 +256,16 @@ export default class OpString {
      */
     getSequenceData() {
         return this.#sequenceData;
+    }
+
+    /**
+     * Returns the configured `maxSequenceLength` value. If the `maxSequenceLength` has not been
+     * configured, `undefined` is returned.
+     * 
+     * @returns {number|undefined}
+     */
+    getMaxSequenceLength() {
+        return this.#maxSequenceLength;
     }
 
     /**
@@ -610,8 +620,8 @@ export default class OpString {
      */
     #isSequenceLengthWithinLimit(sequence) {
         if (
-            this.maxSequenceLength !== undefined
-            && sequence.length > this.maxSequenceLength
+            this.#maxSequenceLength !== undefined
+            && sequence.length > this.#maxSequenceLength
         ) {
             return false;
         }
@@ -732,7 +742,7 @@ export default class OpString {
                     typeof args[0] === 'string'
                     && ! this.#isSequenceLengthWithinLimit(args[0])
                 ) {
-                    throw new RangeError(`${introMsg}provided sequence exceeds the configured 'maxSequenceLength' of ${this.maxSequenceLength} characters.`);
+                    throw new RangeError(`${introMsg}provided sequence exceeds the configured 'maxSequenceLength' of ${this.#maxSequenceLength} characters.`);
                 }
                 break;
 
@@ -841,7 +851,7 @@ export default class OpString {
                     typeof args[0] === 'string'
                     && ! this.#isSequenceLengthWithinLimit(args[0])
                 ) {
-                    throw new RangeError(`${introMsg}${sequenceType} sequence exceeds the configured 'maxSequenceLength' of ${this.maxSequenceLength} characters.`);
+                    throw new RangeError(`${introMsg}${sequenceType} sequence exceeds the configured 'maxSequenceLength' of ${this.#maxSequenceLength} characters.`);
                 }
                 break;
             
