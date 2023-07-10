@@ -59,9 +59,7 @@ export default class OpString {
             this.#validateArguments('constructor', arguments);
             if (config !== undefined) {
                 if (typeof config.operations !== 'undefined') {
-                    for (const [symbol, callback] of Object.entries(config.operations)) {
-                        this.registerOperation(symbol, callback);
-                    }
+                    this.#registerOperations(config.operations);
                 }
                 if (typeof config.values !== 'undefined') {
                     for (const [symbol, value] of Object.entries(config.values)) {
@@ -280,6 +278,32 @@ export default class OpString {
             }
         } catch (error) {
             this.#logError(error);
+        }
+    }
+
+    /**
+     * Registers the operation mappings provided by the `operations` object.
+     * 
+     * @param {Object} operations - Object containing the operation mappings to be registered.
+     */
+    registerOperations(operations) {
+        try {
+            this.#validateArguments('registerOperations', arguments);
+            this.#registerOperations(operations);
+        } catch (error) {
+            this.#logError(error);
+        }
+    }
+
+    /**
+     * Registers the operation mappings provided by the `operations` object without re-validating
+     * the `operations` object.
+     * 
+     * @param {Object} operations - Object containing the operation mappings to be registered.
+     */
+    #registerOperations(operations) {
+        for (const [symbol, callback] of Object.entries(operations)) {
+            this.registerOperation(symbol, callback);
         }
     }
 
@@ -753,6 +777,13 @@ export default class OpString {
                     if (typeof args[1] === 'undefined') {
                         throw new TypeError(`${introMsg}. The 'value' parameter cannot be undefined.`);
                     }
+                }
+                break;
+
+            case 'registerOperations':
+                const registerParamName = method.substring(8).toLowerCase();
+                if (! this.#isValidStoreObject(args[0])) {
+                    throw new TypeError(`Cannot ${method}, since the '${registerParamName}' parameter must be a non-empty plain object.`);
                 }
                 break;
 
