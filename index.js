@@ -60,10 +60,10 @@ export default class OpString {
             this.#validateArguments('constructor', arguments);
             if (config !== undefined) {
                 if (typeof config.operations !== 'undefined') {
-                    this.#registerOperations(config.operations);
+                    this.#registerOperationsInternal(config.operations);
                 }
                 if (typeof config.values !== 'undefined') {
-                    this.#registerValues(config.values);
+                    this.#registerValuesInternal(config.values);
                 }
                 if (typeof config.maxSequenceLength !== 'undefined') {
                     this.#maxSequenceLength = config.maxSequenceLength;
@@ -293,7 +293,7 @@ export default class OpString {
         try {
             this.#validateArguments('setOperations', arguments);
             this.#operations = {};
-            this.#registerOperations(operations);
+            this.#registerOperationsInternal(operations);
         } catch (error) {
             this.#logError(error);
         }
@@ -331,7 +331,7 @@ export default class OpString {
     registerOperations(operations) {
         try {
             this.#validateArguments('registerOperations', arguments);
-            this.#registerOperations(operations);
+            this.#registerOperationsInternal(operations);
         } catch (error) {
             this.#logError(error);
         }
@@ -346,7 +346,7 @@ export default class OpString {
      * 
      * @param {Object} operations - Object containing the operation mappings to be registered.
      */
-    #registerOperations(operations) {
+    #registerOperationsInternal(operations) {
         for (const [symbol, callback] of Object.entries(operations)) {
             this.registerOperation(symbol, callback);
         }
@@ -384,7 +384,7 @@ export default class OpString {
     registerValues(values) {
         try {
             this.#validateArguments('registerValues', arguments);
-            this.#registerValues(values);
+            this.#registerValuesInternal(values);
         } catch (error) {
             this.#logError(error);
         }
@@ -399,7 +399,7 @@ export default class OpString {
      * 
      * @param {Object} values - Object containing the value mappings to be registered.
      */
-    #registerValues(values) {
+    #registerValuesInternal(values) {
         for (const [symbol, callback] of Object.entries(values)) {
             this.registerValue(symbol, callback);
         }
@@ -428,7 +428,7 @@ export default class OpString {
         try {
             this.#validateArguments('setValues', arguments);
             this.#values = {};
-            this.#registerValues(values);
+            this.#registerValuesInternal(values);
         } catch (error) {
             this.#logError(error);
         }
