@@ -594,10 +594,7 @@ export default class OpString {
      * @returns {boolean}
      */
     #isCharCodeWithinRange(value) {
-        return (
-            value >= this.#minCharCode
-            && value <= this.#maxCharCode
-        );
+        return value >= this.#minCharCode && value <= this.#maxCharCode;
     }
 
     /**
