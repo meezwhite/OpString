@@ -37,15 +37,15 @@ export default class OpString {
     /**
      * Creates an instance of OpString.
      * 
-     * @param {Object} [config] Config object to configure OpString features.
-     * @param {string} [config.operationsSequence] Main operations sequence that should be executed
+     * @param {Object} [config] - Config object to configure OpString features.
+     * @param {string} [config.operationsSequence] - Main operations sequence that should be executed
      *      when `execute` is called without providing the `operationsSequence` parameter. (default: '')
-     * @param {Object} [config.operationsStore] Initial object storing operation mappings. (default: {})
-     * @param {Object} [config.valuesStore] Initial object storing value mappings. (default: {})
-     * @param {number} [config.maxOperationsSequenceLength] Specifies a maximum allowed operations
+     * @param {Object} [config.operationsStore] - Initial object storing operation mappings. (default: {})
+     * @param {Object} [config.valuesStore] - Initial object storing value mappings. (default: {})
+     * @param {number} [config.maxOperationsSequenceLength] - Specifies a maximum allowed operations
      *      sequence length. If defined, it must be a positive safe integer. (default: undefined)
-     * @param {boolean} [config.ignoreWarnings] Specifies whether warnings should be ignored. (default: false)
-     * @param {boolean} [config.strictMode] Specifies the behavior of the library with regard to errors.
+     * @param {boolean} [config.ignoreWarnings] - Specifies whether warnings should be ignored. (default: false)
+     * @param {boolean} [config.strictMode] - Specifies the behavior of the library with regard to errors.
      *      If set to `true`, errors will be logged; otherwise, warnings will be logged. Furthermore,
      *      if set to `true` the `maxOperationsSequenceLength` must be adhered to, otherwise, the
      *      respective operations sequence will not be executed. (default: false)
@@ -85,8 +85,8 @@ export default class OpString {
     /**
      * Appends an operation and corresponding values to the operations sequence.
      * 
-     * @param {string|number} operation The character code of the operation to be appended.
-     * @param {Array<string|number>} [values] An array with the characters or character
+     * @param {string|number} operation - The character code of the operation to be appended.
+     * @param {Array<string|number>} [values] - An array with the characters or character
      *      codes of the values corresponding to the operation to be appended.
      * @returns {number|null} The id of the appended operation.
      */
@@ -108,9 +108,9 @@ export default class OpString {
      * Adds an operation and corresponding values to the operations sequence at 
      * the specified index.
      * 
-     * @param {number} index The index at which the operation should be added.
-     * @param {string|number} operation The character or character code of the operation to be added.
-     * @param {Array<string|number>} [values] An array with the characters or character codes of 
+     * @param {number} index - The index at which the operation should be added.
+     * @param {string|number} operation - The character or character code of the operation to be added.
+     * @param {Array<string|number>} [values] - An array with the characters or character codes of 
      *      the values corresponding to the operation to be added.
      * @returns {number|null} The id of the inserted operation.
      */
@@ -407,7 +407,7 @@ export default class OpString {
      *  - `2` if the symbol is a string
      * 
      * @private
-     * @method checkSymbolTypes
+     * @method getSymbolType
      * 
      * @param {*} value The value for which the symbol type should be determined.
      * @returns {number}
@@ -425,6 +425,9 @@ export default class OpString {
     /**
      * Computes the character code of the provided value.
      * 
+     * @private
+     * @method computeCharCode
+     * 
      * @param {*} value The value for which the character code should be computed.
      * @returns {*} If the provided value is a string, the character code of the first position
      *      of the string is computed; otherwise, the provided value is returned back.
@@ -439,6 +442,9 @@ export default class OpString {
     /**
      * Computes an array of character codes given the provided values.
      *
+     * @private
+     * @method computeCharCodes
+     * 
      * @param {Array<*>} values The array of values for which character codes should be computed.
      * @returns {Array<number|null>} An array of character codes. If a character code cannot be
      *      computed, `null` will be used instead.
