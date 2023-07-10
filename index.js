@@ -206,15 +206,6 @@ export default class OpString {
     }
 
     /**
-     * Returns the sequence data array.
-     * 
-     * @returns {Array<Object>}
-     */
-    getSequenceData() {
-        return this.#sequenceData;
-    }
-
-    /**
      * Sets the character sequence and computes the sequence data array.
      * 
      * @method setSequence
@@ -259,6 +250,15 @@ export default class OpString {
         } catch (error) {
             this.#logError(error);
         }
+    }
+
+    /**
+     * Returns the sequence data array.
+     * 
+     * @return {Array<Object>}
+     */
+    getSequenceData() {
+        return this.#sequenceData;
     }
 
     /**
