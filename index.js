@@ -214,7 +214,7 @@ export default class OpString {
      */
     setSequence(sequence) {
         try {
-            this.#validateArguments('set sequence', arguments);
+            this.#validateArguments('setSequence', arguments);
             this.#sequence = sequence;
             this.#sequenceData = [];
             for (let i = 0; i < sequence.length; i++) {
