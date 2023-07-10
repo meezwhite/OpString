@@ -36,18 +36,23 @@ export default class OpString {
     /**
      * Creates an instance of OpString.
      * 
+     * @constructor
+     * 
      * @param {Object} [config] - Config object to configure OpString features.
-     * @param {string} [config.sequence] - The character sequence that should be executed when `execute`
-     *      is called without providing a `sequence` parameter. (default: '')
-     * @param {Object} [config.operations] - Initial object storing operation mappings. (default: {})
-     * @param {Object} [config.values] - Initial object storing value mappings. (default: {})
-     * @param {number} [config.maxSequenceLength] - Specifies a maximum allowed operations
-     *      sequence length. If defined, it must be a positive safe integer. (default: undefined)
-     * @param {boolean} [config.ignoreWarnings] - Specifies whether warnings should be ignored. (default: false)
-     * @param {boolean} [config.strictMode] - Specifies the behavior of the library with regard to errors.
-     *      If set to `true`, errors will be logged; otherwise, warnings will be logged. Furthermore,
-     *      if set to `true` the `maxSequenceLength` must be adhered to, otherwise, the
-     *      respective character sequence will not be executed. (default: false)
+     * @param {string} [config.sequence] - The character sequence to be executed when `execute` is
+     *      called without providing a `sequence` parameter. (default: '')
+     * @param {Object} [config.operations] - Object containing the operation mappings to be
+     *      registered. (default: {})
+     * @param {Object} [config.values] - Object containing the value mappings to be 
+     *      registered. (default: {})
+     * @param {number} [config.maxSequenceLength] - Specifies a maximum allowed sequence length.
+     *      If defined, it must be a positive safe integer. (default: undefined)
+     * @param {boolean} [config.ignoreWarnings] - Specifies whether warnings should be ignored.
+     *      (default: false)
+     * @param {boolean} [config.strictMode] - Specifies the behavior of the library with regard to
+     *      errors. If set to `true`, errors will be logged; otherwise, warnings will be logged.
+     *      Furthermore, if set to `true` the `maxSequenceLength` must strictly be adhered to,
+     *      otherwise, the respective character sequence will not be executed. (default: false)
      */
     constructor(config) {
         try {
