@@ -2,6 +2,8 @@
   "name": "opstring",
   "version": "0.1.0",
   "description": "OpString is a JavaScript library for mapping and executing operations defined by character sequences.",
+  "author": "meezwhite",
+  "license": "MIT",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -21,8 +23,6 @@
     "type": "git",
     "url": "git+https://github.com/meezwhite/OpString.git"
   },
-  "author": "meezwhite",
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/meezwhite/OpString/issues"
   },
