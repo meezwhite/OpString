@@ -87,6 +87,8 @@ export default class OpString {
      * Appends an operation and the corresponding values to the sequence data array and
      * computes the character sequence.
      * 
+     * @method append
+     * 
      * @param {string|number} operation - The character code of the operation to be appended.
      * @param {Array<string|number>} [values] - An array with the characters or character
      *      codes of the values corresponding to the operation to be appended.
@@ -113,6 +115,8 @@ export default class OpString {
     /**
      * Inserts an operation and the corresponding values to the sequence data array at the specified
      * index and computes the character sequence.
+     * 
+     * @method insert
      * 
      * @param {number} index - The index at which the operation should be added.
      * @param {string|number} operation - The character or character code of the operation to be
@@ -143,6 +147,8 @@ export default class OpString {
      * Prepends an operation and the corresponding values to the sequence data array and computes
      * the character sequence.
      * 
+     * @method prepend
+     * 
      * @param {string|number} operation - The character code of the operation to be prepended.
      * @param {Array<string|number>} [values] - An array with the character codes of the values
      *      corresponding to the operation to be prepended.
@@ -170,6 +176,8 @@ export default class OpString {
      * Removes the operation with the specified id from the sequence data array and computes the
      * character sequence.
      * 
+     * @method remove
+     * 
      * @param {number} id - The id of the operation that should be removed.
      * 
      * @throws {ReferenceError} If there is no operation with the specified id.
@@ -195,6 +203,8 @@ export default class OpString {
 
     /**
      * Returns the character sequence.
+     * 
+     * @method getSequence
      * 
      * @returns {string}
      */
@@ -252,6 +262,8 @@ export default class OpString {
     /**
      * Returns the sequence data array.
      * 
+     * @method getSequenceData
+     * 
      * @return {Array<Object>}
      */
     getSequenceData() {
@@ -260,6 +272,8 @@ export default class OpString {
 
     /**
      * Returns the registered operations.
+     * 
+     * @method getOperations
      * 
      * @returns {Object}
      */
@@ -270,6 +284,8 @@ export default class OpString {
     /**
      * Registers the operation mappings provided by the `operations` object.
      * Previously registered operation mappings will be deleted.
+     * 
+     * @method setOperations
      * 
      * @param {Object} operations - Object containing new operation mappings to be registered.
      */
@@ -308,6 +324,8 @@ export default class OpString {
     /**
      * Registers additional operation mappings provided by the `operations` object.
      * 
+     * @method registerOperations
+     * 
      * @param {Object} operations - Object containing the operation mappings to be registered.
      */
     registerOperations(operations) {
@@ -322,6 +340,9 @@ export default class OpString {
     /**
      * Registers additional operation mappings provided by the `operations` object without 
      * re-validating the `operations` object.
+     * 
+     * @private
+     * @method registerOperations
      * 
      * @param {Object} operations - Object containing the operation mappings to be registered.
      */
@@ -356,6 +377,8 @@ export default class OpString {
     /**
      * Registers additional value mappings provided by the `values` object.
      * 
+     * @method registerValues
+     * 
      * @param {Object} values - Object containing the value mappings to be registered.
      */
     registerValues(values) {
@@ -371,6 +394,9 @@ export default class OpString {
      * Registers additional value mappings provided by the `values` object without re-validating
      * the `values` object.
      * 
+     * @private
+     * @method registerValues
+     * 
      * @param {Object} values - Object containing the value mappings to be registered.
      */
     #registerValues(values) {
@@ -382,6 +408,8 @@ export default class OpString {
     /**
      * Returns the registered values.
      * 
+     * @method getValues
+     * 
      * @returns {Object}
      */
     getValues() {
@@ -391,6 +419,8 @@ export default class OpString {
     /**
      * Registers the value mappings provided by the `values` object.
      * Previously registered value mappings will be deleted.
+     * 
+     * @method setValues
      * 
      * @param {Object} values - Object containing new values mappings to be registered.
      */
@@ -408,6 +438,8 @@ export default class OpString {
      * Returns the configured `maxSequenceLength` value. If the `maxSequenceLength` has not been
      * configured, `undefined` is returned.
      * 
+     * @method getMaxSequenceLength
+     * 
      * @returns {number|undefined}
      */
     getMaxSequenceLength() {
@@ -416,6 +448,8 @@ export default class OpString {
 
     /**
      * Sets the maximum allowed sequence limit.
+     * 
+     * @method setMaxSequenceLength
      * 
      * @param {number} maxSequenceLength 
      */
