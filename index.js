@@ -1,11 +1,11 @@
 /**!
- * OpMapper
+ * OpString
  * 
  * @version 0.1.0
  * @license MIT
  * @copyright meezwhite
  */
-export default class OpMapper {
+export default class OpString {
     version = '0.1.0';
 
     operationsStore = {};
@@ -35,9 +35,9 @@ export default class OpMapper {
     ];
 
     /**
-     * Creates an instance of OpMapper.
+     * Creates an instance of OpString.
      * 
-     * @param {Object} [config] Config object to configure OpMapper features.
+     * @param {Object} [config] Config object to configure OpString features.
      * @param {string} [config.operationsSequence] Main operations sequence that should be executed
      *      when `execute` is called without providing the `operationsSequence` parameter. (default: '')
      * @param {Object} [config.operationsStore] Initial object storing operation mappings. (default: {})
@@ -78,7 +78,7 @@ export default class OpMapper {
                 }
             }
         } catch (error) {
-            this.#logError(`[OpMapper] ${error.name}: ${error.message}`);
+            this.#logError(`[${this.constructor.name}] ${error.name}: ${error.message}`);
         }
     }
 
@@ -100,7 +100,7 @@ export default class OpMapper {
             });
             this.#computeOperationsSequence();
         } catch (error) {
-            this.#logError(`[OpMapper] ${error.name}: ${error.message}`);
+            this.#logError(`[${this.constructor.name}] ${error.name}: ${error.message}`);
         }
     }
 
@@ -124,7 +124,7 @@ export default class OpMapper {
             });
             this.#computeOperationsSequence();
         } catch (error) {
-            this.#logError(`[OpMapper] ${error.name}: ${error.message}`);
+            this.#logError(`[${this.constructor.name}] ${error.name}: ${error.message}`);
         }
     }
 
@@ -146,7 +146,7 @@ export default class OpMapper {
             });
             this.#computeOperationsSequence();
         } catch (error) {
-            this.#logError(`[OpMapper] ${error.name}: ${error.message}`);
+            this.#logError(`[${this.constructor.name}] ${error.name}: ${error.message}`);
         }
     }
 
@@ -170,7 +170,7 @@ export default class OpMapper {
                 throw new ReferenceError(`Cannot remove operation with id ${id}, since not found.`);
             }
         } catch (error) {
-            this.#logError(`[OpMapper] ${error.name}: ${error.message}`);
+            this.#logError(`[${this.constructor.name}] ${error.name}: ${error.message}`);
             return false;
         }
         return true;
@@ -257,7 +257,7 @@ export default class OpMapper {
                 }
             }
         } catch (error) {
-            this.#logError(`[OpMapper] ${error.name}: ${error.message}`);
+            this.#logError(`[${this.constructor.name}] ${error.name}: ${error.message}`);
         }
     }
 
@@ -279,7 +279,7 @@ export default class OpMapper {
                 this.operationsStore[symbol] = callback;
             }
         } catch (error) {
-            this.#logError(`[OpMapper] ${error.name}: ${error.message}`);
+            this.#logError(`[${this.constructor.name}] ${error.name}: ${error.message}`);
         }
     }
 
@@ -301,7 +301,7 @@ export default class OpMapper {
                 this.valuesStore[symbol] = value;
             }
         } catch (error) {
-            this.#logError(`[OpMapper] ${error.name}: ${error.message}`);
+            this.#logError(`[${this.constructor.name}] ${error.name}: ${error.message}`);
         }
     }
 
@@ -325,7 +325,7 @@ export default class OpMapper {
             }
         } catch (error) {
             caughtErrors = true;
-            this.#logError(`[OpMapper] ${error.name}: ${error.message}`);
+            this.#logError(`[${this.constructor.name}] ${error.name}: ${error.message}`);
         } finally {
             if (! caughtErrors || (caughtErrors && ! this.strictMode)) {
                 if (operationsSequence_isUndefined) {
