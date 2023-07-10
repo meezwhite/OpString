@@ -389,6 +389,22 @@ export default class OpString {
     }
 
     /**
+     * Registers the value mappings provided by the `values` object.
+     * Previously registered value mappings will be deleted.
+     * 
+     * @param {Object} values - Object containing new values mappings to be registered.
+     */
+    setValues(values) {
+        try {
+            this.#validateArguments('setValues', arguments);
+            this.#values = {};
+            this.#registerValues(values);
+        } catch (error) {
+            this.#logError(error);
+        }
+    }
+
+    /**
      * Returns the configured `maxSequenceLength` value. If the `maxSequenceLength` has not been
      * configured, `undefined` is returned.
      * 
