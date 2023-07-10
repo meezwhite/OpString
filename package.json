@@ -14,14 +14,13 @@
   },
   "keywords": [
     "javascript",
-    "execute",
     "operations",
     "string",
     "mapper",
-    "encode",
-    "decode",
+    "mapping",
     "utf-8",
-    "utf-16"
+    "utf-16",
+    "fxhash"
   ],
   "repository": {
     "type": "git",
