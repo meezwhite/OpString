@@ -13,8 +13,8 @@ export default class OpString {
     #operations = {};
     #values = {};
     #maxSequenceLength;
-    ignoreWarnings = false;
-    strictMode = false;
+    #ignoreWarnings = false;
+    #strictMode = false;
 
     #nextOperationId = 1;
 
@@ -72,10 +72,10 @@ export default class OpString {
                     this.setSequence(config.sequence);
                 }
                 if (typeof config.ignoreWarnings === 'boolean') {
-                    this.ignoreWarnings = config.ignoreWarnings;
+                    this.#ignoreWarnings = config.ignoreWarnings;
                 }
                 if (typeof config.strictMode === 'boolean') {
-                    this.strictMode = config.strictMode;
+                    this.#strictMode = config.strictMode;
                 }
             }
         } catch (error) {
@@ -450,7 +450,7 @@ export default class OpString {
             caughtErrors = true;
             this.#logError(error);
         } finally {
-            if (! caughtErrors || (caughtErrors && ! this.strictMode)) {
+            if (! caughtErrors || (caughtErrors && ! this.#strictMode)) {
                 if (sequence_isUndefined) {
                     this.#executeSequenceFromData();
                 } else {
@@ -687,10 +687,10 @@ export default class OpString {
      */
     #logError(error) {
         error = `[${this.constructor.name}] ${error.name}: ${error.message}`;
-        if (this.strictMode) {
+        if (this.#strictMode) {
             console.error(error);
         } else {
-            if (! this.ignoreWarnings) {
+            if (! this.#ignoreWarnings) {
                 console.warn(error);
             }
         }
@@ -904,7 +904,7 @@ export default class OpString {
             case 'executeProvided':
                 const sequenceType = method === 'executeProvided' ? 'provided' : '';
                 method = 'execute';
-                if (this.strictMode) {
+                if (this.#strictMode) {
                     introMsg = `Cannot ${method} the${sequenceType} sequence '${args[0]}'. The`;
                 } else {
                     introMsg = `Executing the${sequenceType} sequence '${args[0]}' despite exceeded length. The`;
