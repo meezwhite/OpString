@@ -374,6 +374,15 @@ export default class OpString {
     }
 
     /**
+     * Returns the registered values.
+     * 
+     * @returns {Object}
+     */
+    getValues() {
+        return this.#values;
+    }
+
+    /**
      * Attempts to execute the character sequence of the current instance or a provided
      * character sequence specified by the `sequence` parameter.
      * 
