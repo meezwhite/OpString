@@ -268,6 +268,22 @@ export default class OpString {
     }
 
     /**
+     * Registers the operation mappings provided by the `operations` object.
+     * Previously registered operation mappings will be deleted.
+     * 
+     * @param {Object} operations - Object containing new operation mappings to be registered.
+     */
+    setOperations(operations) {
+        try {
+            this.#validateArguments('setOperations', arguments);
+            this.#operations = {};
+            this.#registerOperations(operations);
+        } catch (error) {
+            this.#logError(error);
+        }
+    }
+
+    /**
      * Registers an operation mapping.
      * 
      * @method registerOperation
@@ -847,9 +863,16 @@ export default class OpString {
                 }
                 break;
 
+            case 'setOperations':
             case 'registerOperations':
+            case 'setValues':
             case 'registerValues':
-                const registerParamName = method.substring(8).toLowerCase();
+                let registerParamName;
+                if (['setOperations', 'registerOperations'].includes(method)) {
+                    registerParamName = 'operations';
+                } else if (['setValues', 'registerValues'].includes(method)) {
+                    registerParamName = 'values';
+                }
                 if (! this.#isValidStoreObject(args[0])) {
                     throw new TypeError(`Cannot ${method}, since the '${registerParamName}' parameter must be a non-empty plain object.`);
                 }
