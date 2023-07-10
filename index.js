@@ -8,8 +8,8 @@
 export default class OpString {
     version = '0.1.0';
 
-    valuesStore = {};
     #operations = {};
+    #values = {};
     maxOperationsSequenceLength;
     ignoreWarnings = false;
     strictMode = false;
@@ -27,8 +27,8 @@ export default class OpString {
 
     #validConfigKeys = [
         'operationsSequence',
-        'valuesStore',
         'operations',
+        'values',
         'maxOperationsSequenceLength',
         'ignoreWarnings',
         'strictMode',
@@ -40,8 +40,8 @@ export default class OpString {
      * @param {Object} [config] - Config object to configure OpString features.
      * @param {string} [config.operationsSequence] - Main operations sequence that should be executed
      *      when `execute` is called without providing the `operationsSequence` parameter. (default: '')
-     * @param {Object} [config.valuesStore] - Initial object storing value mappings. (default: {})
      * @param {Object} [config.operations] - Initial object storing operation mappings. (default: {})
+     * @param {Object} [config.values] - Initial object storing value mappings. (default: {})
      * @param {number} [config.maxOperationsSequenceLength] - Specifies a maximum allowed operations
      *      sequence length. If defined, it must be a positive safe integer. (default: undefined)
      * @param {boolean} [config.ignoreWarnings] - Specifies whether warnings should be ignored. (default: false)
@@ -59,8 +59,8 @@ export default class OpString {
                         this.registerOperation(symbol, callback);
                     }
                 }
-                if (typeof config.valuesStore !== 'undefined') {
-                    for (const [symbol, value] of Object.entries(config.valuesStore)) {
+                if (typeof config.values !== 'undefined') {
+                    for (const [symbol, value] of Object.entries(config.values)) {
                         this.registerValue(symbol, value);
                     }
                 }
@@ -225,7 +225,7 @@ export default class OpString {
                     const args = [];
                     for (let j = i+1; j < operationsSequence.length; j++) {
                         const valueCharCode = operationsSequence.charCodeAt(j);
-                        const value = this.valuesStore[valueCharCode];
+                        const value = this.#values[valueCharCode];
                         if (value) {
                             args.push(valueCharCode);
                         } else {
@@ -288,9 +288,9 @@ export default class OpString {
             this.#validateArguments('registerValue', arguments);
             const symbolType = this.#getSymbolType(symbol);
             if (symbolType === this.#symbolTypeString) {
-                this.valuesStore[symbol.charCodeAt(0)] = value;
+                this.#values[symbol.charCodeAt(0)] = value;
             } else if (symbolType === this.#symbolTypeInteger) {
-                this.valuesStore[symbol] = value;
+                this.#values[symbol] = value;
             }
         } catch (error) {
             this.#logError(`${error.name}: ${error.message}`);
@@ -347,7 +347,7 @@ export default class OpString {
                 const args = [];
                 for (let j = i+1; j < operationsSequence.length; j++) {
                     const valueCharCode = operationsSequence.charCodeAt(j);
-                    const value = this.valuesStore[valueCharCode];
+                    const value = this.#values[valueCharCode];
                     if (value) {
                         args.push(value);
                     } else {
@@ -377,7 +377,7 @@ export default class OpString {
                 const args = [];
                 for (let j = 0; j < this.#operationsSequenceData[i].values.length; j++) {
                     const valueCharCode = this.#operationsSequenceData[i].values[j];
-                    const value = this.valuesStore[valueCharCode];
+                    const value = this.#values[valueCharCode];
                     if (value) {
                         args.push(value);
                     } else {
@@ -621,10 +621,10 @@ export default class OpString {
                             throw new TypeError(`The 'config.operations' property, if defined, must be a non-empty plain object.`);
                         }
                         if (
-                            typeof args[0].valuesStore !== 'undefined'
-                            && ! this.#isValidStoreObject(args[0].valuesStore)
+                            typeof args[0].values !== 'undefined'
+                            && ! this.#isValidStoreObject(args[0].values)
                         ) {
-                            throw new TypeError(`The 'config.valuesStore' property, if defined, must be a non-empty plain object`);
+                            throw new TypeError(`The 'config.values' property, if defined, must be a non-empty plain object`);
                         }
                         if (
                             typeof args[0].maxOperationsSequenceLength !== 'undefined'
