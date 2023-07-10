@@ -15,6 +15,7 @@ export default class OpString {
     maxSequenceLength;
     ignoreWarnings = false;
     strictMode = false;
+
     #nextOperationId = 1;
 
     #symbolTypeInvalid = 0;
