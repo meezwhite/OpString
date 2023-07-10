@@ -338,6 +338,9 @@ export default class OpString {
      * @param {string} operationsSequence The operations sequence to be executed.
      */
     #executeOperationsSequence(operationsSequence) {
+        if (typeof operationsSequence !== 'string') {
+            operationsSequence = '';
+        }
         for (let i = 0; i < operationsSequence.length; i++) {
             const operation = this.operationsStore[operationsSequence.charCodeAt(i)];
             if (operation) {
