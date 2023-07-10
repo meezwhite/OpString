@@ -8,8 +8,8 @@
 export default class OpString {
     version = '0.1.0';
 
-    operationsStore = {};
     valuesStore = {};
+    #operations = {};
     maxOperationsSequenceLength;
     ignoreWarnings = false;
     strictMode = false;
@@ -27,8 +27,8 @@ export default class OpString {
 
     #validConfigKeys = [
         'operationsSequence',
-        'operationsStore',
         'valuesStore',
+        'operations',
         'maxOperationsSequenceLength',
         'ignoreWarnings',
         'strictMode',
@@ -40,8 +40,8 @@ export default class OpString {
      * @param {Object} [config] - Config object to configure OpString features.
      * @param {string} [config.operationsSequence] - Main operations sequence that should be executed
      *      when `execute` is called without providing the `operationsSequence` parameter. (default: '')
-     * @param {Object} [config.operationsStore] - Initial object storing operation mappings. (default: {})
      * @param {Object} [config.valuesStore] - Initial object storing value mappings. (default: {})
+     * @param {Object} [config.operations] - Initial object storing operation mappings. (default: {})
      * @param {number} [config.maxOperationsSequenceLength] - Specifies a maximum allowed operations
      *      sequence length. If defined, it must be a positive safe integer. (default: undefined)
      * @param {boolean} [config.ignoreWarnings] - Specifies whether warnings should be ignored. (default: false)
@@ -54,8 +54,8 @@ export default class OpString {
         try {
             this.#validateArguments('constructor', arguments);
             if (config !== undefined) {
-                if (typeof config.operationsStore !== 'undefined') {
-                    for (const [symbol, callback] of Object.entries(config.operationsStore)) {
+                if (typeof config.operations !== 'undefined') {
+                    for (const [symbol, callback] of Object.entries(config.operations)) {
                         this.registerOperation(symbol, callback);
                     }
                 }
@@ -220,7 +220,7 @@ export default class OpString {
             this.#operationsSequenceData = [];
             for (let i = 0; i < operationsSequence.length; i++) {
                 const operationCharCode = operationsSequence.charCodeAt(i);
-                const operation = this.operationsStore[operationCharCode];
+                const operation = this.#operations[operationCharCode];
                 if (operation) {
                     const args = [];
                     for (let j = i+1; j < operationsSequence.length; j++) {
@@ -229,7 +229,7 @@ export default class OpString {
                         if (value) {
                             args.push(valueCharCode);
                         } else {
-                            if (this.operationsStore[valueCharCode]) {
+                            if (this.#operations[valueCharCode]) {
                                 break;
                             } else {
                                 /**
@@ -266,9 +266,9 @@ export default class OpString {
             this.#validateArguments('registerOperation', arguments);
             const symbolType = this.#getSymbolType(symbol);
             if (symbolType === this.#symbolTypeString) {
-                this.operationsStore[symbol.charCodeAt(0)] = callback;
+                this.#operations[symbol.charCodeAt(0)] = callback;
             } else if (symbolType === this.#symbolTypeInteger) {
-                this.operationsStore[symbol] = callback;
+                this.#operations[symbol] = callback;
             }
         } catch (error) {
             this.#logError(`${error.name}: ${error.message}`);
@@ -342,7 +342,7 @@ export default class OpString {
             operationsSequence = '';
         }
         for (let i = 0; i < operationsSequence.length; i++) {
-            const operation = this.operationsStore[operationsSequence.charCodeAt(i)];
+            const operation = this.#operations[operationsSequence.charCodeAt(i)];
             if (operation) {
                 const args = [];
                 for (let j = i+1; j < operationsSequence.length; j++) {
@@ -351,7 +351,7 @@ export default class OpString {
                     if (value) {
                         args.push(value);
                     } else {
-                        if (this.operationsStore[valueCharCode]) {
+                        if (this.#operations[valueCharCode]) {
                             break;
                         } else {
                             args.push(undefined);
@@ -372,7 +372,7 @@ export default class OpString {
     #executeOperationsSequenceFromData() {
         for (let i = 0; i < this.#operationsSequenceData.length; i++) {
             const operationCharCode = this.#operationsSequenceData[i].operation;
-            const operation = this.operationsStore[operationCharCode];
+            const operation = this.#operations[operationCharCode];
             if (operation) {
                 const args = [];
                 for (let j = 0; j < this.#operationsSequenceData[i].values.length; j++) {
@@ -381,7 +381,7 @@ export default class OpString {
                     if (value) {
                         args.push(value);
                     } else {
-                        if (this.operationsStore[valueCharCode]) {
+                        if (this.#operations[valueCharCode]) {
                             break;
                         } else {
                             args.push(undefined);
@@ -615,10 +615,10 @@ export default class OpString {
                             throw new TypeError(`The 'config.operationsSequence' property, if defined, must be a string.`);
                         }
                         if (
-                            typeof args[0].operationsStore !== 'undefined'
-                            && ! this.#isValidStoreObject(args[0].operationsStore)
+                            typeof args[0].operations !== 'undefined'
+                            && ! this.#isValidStoreObject(args[0].operations)
                         ) {
-                            throw new TypeError(`The 'config.operationsStore' property, if defined, must be a non-empty plain object.`);
+                            throw new TypeError(`The 'config.operations' property, if defined, must be a non-empty plain object.`);
                         }
                         if (
                             typeof args[0].valuesStore !== 'undefined'
