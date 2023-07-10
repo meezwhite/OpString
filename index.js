@@ -91,17 +91,21 @@ export default class OpString {
      * @returns {number|null} The id of the appended operation.
      */
     append(operation, values) {
+        const operationId = this.#nextOperationId;
         try {
             this.#validateArguments('append', arguments);
             this.#operationsSequenceData.push({
-                id: this.#nextOperationId++,
+                id: operationId,
                 operation: this.#computeCharCode(operation),
                 values: this.#computeCharCodes(values),
             });
+            this.#nextOperationId++;
             this.#computeOperationsSequence();
+            return operationId;
         } catch (error) {
             this.#logError(`[${this.constructor.name}] ${error.name}: ${error.message}`);
         }
+        return null;
     }
 
     /**
@@ -115,17 +119,21 @@ export default class OpString {
      * @returns {number|null} The id of the inserted operation.
      */
     insert(index, operation, values) {
+        const operationId = this.#nextOperationId;
         try {
             this.#validateArguments('add', arguments);
             this.#operationsSequenceData.splice(index, 0, {
-                id: this.#nextOperationId++,
+                id: operationId,
                 operation: this.#computeCharCode(operation),
                 values: this.#computeCharCodes(values),
             });
+            this.#nextOperationId++;
             this.#computeOperationsSequence();
+            return operationId;
         } catch (error) {
             this.#logError(`[${this.constructor.name}] ${error.name}: ${error.message}`);
         }
+        return null;
     }
 
     /**
@@ -137,17 +145,21 @@ export default class OpString {
      * @returns {number|null} The id of the prepended operation.
      */
     prepend(operation, values) {
+        const operationId = this.#nextOperationId;
         try {
             this.#validateArguments('prepend', arguments);
             this.#operationsSequenceData.unshift({
-                id: this.#nextOperationId++,
+                id: operationId,
                 operation: this.#computeCharCode(operation),
                 values: this.#computeCharCodes(values),
             });
+            this.#nextOperationId++;
             this.#computeOperationsSequence();
+            return operationId;
         } catch (error) {
             this.#logError(`[${this.constructor.name}] ${error.name}: ${error.message}`);
         }
+        return null;
     }
 
     /**
