@@ -761,6 +761,7 @@ export default class OpString {
      * @throws {SyntaxError} If the arguments have syntax errors:
      *      - `append`, `insert` and `prepend`: If the `values` parameter contains invalid symbols.
      *      - `append`, `insert`, `prepend`, `registerOperation` and `registerValue`: If the `symbol` parameter is a string but not a single character.
+     *      - `execute`: If the sequence to be executed is empty.
      * 
      * @throws {RangeError} If the arguments are out of valid range:
      *      - `append`, `insert`, `prepend`, `registerOperation` and `registerValue`: If the `symbol` parameter is an integer but out of range.
@@ -958,11 +959,13 @@ export default class OpString {
                 ) {
                     throw new TypeError(`${introMsg} sequence must be a string.`);
                 }
-                if (
-                    typeof args[0] === 'string'
-                    && ! this.#isSequenceLengthWithinLimit(args[0])
-                ) {
-                    throw new RangeError(`${introMsg}${sequenceType} sequence exceeds the configured 'maxSequenceLength' of ${this.#maxSequenceLength} characters.`);
+                if (typeof args[0] === 'string') {
+                    if (args[0].length === 0) {
+                        throw new SyntaxError(`Cannot execute empty sequence.`);
+                    }
+                    else if (! this.#isSequenceLengthWithinLimit(args[0])) {
+                        throw new RangeError(`${introMsg}${sequenceType} sequence exceeds the configured 'maxSequenceLength' of ${this.#maxSequenceLength} characters.`);
+                    }
                 }
                 break;
             
