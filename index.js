@@ -831,7 +831,7 @@ export default class OpString {
                     typeof args[0] === 'string'
                     && ! this.#isSequenceLengthWithinLimit(args[0])
                 ) {
-                    throw new RangeError(`${introMsg}provided sequence exceeds the configured 'maxSequenceLength' of ${this.#maxSequenceLength} characters.`);
+                    throw new RangeError(`${introMsg} provided sequence exceeds the configured 'maxSequenceLength' of ${this.#maxSequenceLength} characters.`);
                 }
                 break;
 
