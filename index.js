@@ -220,42 +220,47 @@ export default class OpString {
      * @param {string} sequence - The character sequence that should be set.
      */
     setSequence(sequence) {
+        let caughtError = false;
         try {
             this.#validateArguments('setSequence', arguments);
-            this.#sequence = sequence;
-            this.#sequenceData = [];
-            for (let i = 0; i < sequence.length; i++) {
-                const operationCharCode = sequence.charCodeAt(i);
-                const operation = this.#operations[operationCharCode];
-                if (operation) {
-                    const args = [];
-                    for (let j = i+1; j < sequence.length; j++) {
-                        const valueCharCode = sequence.charCodeAt(j);
-                        const value = this.#values[valueCharCode];
-                        if (value) {
-                            args.push(valueCharCode);
-                        } else {
-                            if (this.#operations[valueCharCode]) {
-                                break;
-                            } else {
-                                /**
-                                 * NOTE: Register unknown value symbols with a value of `null`.
-                                 * Enables handling of unknown value symbols appropriately.
-                                 */
-                                this.registerValue(valueCharCode, null);
+        } catch (error) {
+            caughtError = true;
+            this.#logError(error);
+        } finally {
+            if (! caughtError || (caughtError && ! this.#strictMode)) {
+                this.#sequence = sequence;
+                this.#sequenceData = [];
+                for (let i = 0; i < sequence.length; i++) {
+                    const operationCharCode = sequence.charCodeAt(i);
+                    const operation = this.#operations[operationCharCode];
+                    if (operation) {
+                        const args = [];
+                        for (let j = i+1; j < sequence.length; j++) {
+                            const valueCharCode = sequence.charCodeAt(j);
+                            const value = this.#values[valueCharCode];
+                            if (value) {
                                 args.push(valueCharCode);
+                            } else {
+                                if (this.#operations[valueCharCode]) {
+                                    break;
+                                } else {
+                                    /**
+                                     * NOTE: Register unknown value symbols with a value of `null`.
+                                     * Enables handling of unknown value symbols appropriately.
+                                     */
+                                    this.registerValue(valueCharCode, null);
+                                    args.push(valueCharCode);
+                                }
                             }
                         }
+                        this.#sequenceData.push({
+                            id: this.#nextOperationId++,
+                            operation: operationCharCode,
+                            values: args,
+                        });
                     }
-                    this.#sequenceData.push({
-                        id: this.#nextOperationId++,
-                        operation: operationCharCode,
-                        values: args,
-                    });
                 }
             }
-        } catch (error) {
-            this.#logError(error);
         }
     }
 
@@ -814,7 +819,11 @@ export default class OpString {
                 break;
 
             case 'setSequence':
-                introMsg = `Cannot ${method} to '${args[0]}'. The `;
+                if (this.#strictMode) {
+                    introMsg = `Cannot ${method} to '${args[0]}'. The`;
+                } else {
+                    introMsg = `Setting the sequence to '${args[0]}' despite exceeded length. The`;
+                }
                 if (
                     typeof args[0] !== 'undefined'
                     && typeof args[0] !== 'string'
