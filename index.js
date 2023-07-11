@@ -59,23 +59,23 @@ export default class OpString {
         try {
             this.#validateArguments('constructor', arguments);
             if (config !== undefined) {
-                if (typeof config.operations !== 'undefined') {
-                    this.#registerOperationsInternal(config.operations);
-                }
-                if (typeof config.values !== 'undefined') {
-                    this.#registerValuesInternal(config.values);
-                }
                 if (typeof config.maxSequenceLength !== 'undefined') {
                     this.#maxSequenceLength = config.maxSequenceLength;
-                }
-                if (typeof config.sequence !== 'undefined') {
-                    this.setSequence(config.sequence);
                 }
                 if (typeof config.ignoreWarnings === 'boolean') {
                     this.#ignoreWarnings = config.ignoreWarnings;
                 }
                 if (typeof config.strictMode === 'boolean') {
                     this.#strictMode = config.strictMode;
+                }
+                if (typeof config.operations !== 'undefined') {
+                    this.#registerOperationsInternal(config.operations);
+                }
+                if (typeof config.values !== 'undefined') {
+                    this.#registerValuesInternal(config.values);
+                }
+                if (typeof config.sequence !== 'undefined') {
+                    this.setSequence(config.sequence);
                 }
             }
         } catch (error) {
