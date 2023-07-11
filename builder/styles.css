@@ -13,12 +13,12 @@
 #operations_table,
 #mappings_table {
     display: flex;
+    flex-wrap: wrap;
 }
 .char-cell {
     display: flex;
     flex-direction: column;
     border: 2px solid black;
-    border-right-width: 0px;
     text-align: center;
     cursor: pointer;
     width: 60px;
