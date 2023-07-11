@@ -813,12 +813,6 @@ export default class OpString {
                 }
                 break;
 
-            case 'remove':
-                if (! this.#isPositiveSafeInteger(args[0])) {
-                    throw new TypeError(`Cannot remove operation with id '${args[0]}'. The id must be a positive safe integer.`);
-                }
-                break;
-
             case 'setSequence':
                 introMsg = `Cannot ${method} to '${args[0]}'. The `;
                 if (
@@ -832,6 +826,12 @@ export default class OpString {
                     && ! this.#isSequenceLengthWithinLimit(args[0])
                 ) {
                     throw new RangeError(`${introMsg} provided sequence exceeds the configured 'maxSequenceLength' of ${this.#maxSequenceLength} characters.`);
+                }
+                break;
+
+            case 'remove':
+                if (! this.#isPositiveSafeInteger(args[0])) {
+                    throw new TypeError(`Cannot remove operation with id '${args[0]}'. The id must be a positive safe integer.`);
                 }
                 break;
 
