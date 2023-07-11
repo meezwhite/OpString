@@ -84,6 +84,80 @@ export default class OpString {
     }
 
     /**
+     * Returns the character sequence.
+     * 
+     * @method getSequence
+     * 
+     * @returns {string}
+     */
+    getSequence() {
+        return this.#sequence;
+    }
+
+    /**
+     * Sets the character sequence and computes the sequence data array.
+     * 
+     * @method setSequence
+     * 
+     * @param {string} sequence - The character sequence that should be set.
+     */
+    setSequence(sequence) {
+        let caughtError = false;
+        try {
+            this.#validateArguments('setSequence', arguments);
+        } catch (error) {
+            caughtError = true;
+            this.#logError(error);
+        } finally {
+            if (! caughtError || (caughtError && ! this.#strictMode)) {
+                this.#sequence = sequence;
+                this.#sequenceData = [];
+                for (let i = 0; i < sequence.length; i++) {
+                    const operationCharCode = sequence.charCodeAt(i);
+                    const operation = this.#operations[operationCharCode];
+                    if (operation) {
+                        const args = [];
+                        for (let j = i+1; j < sequence.length; j++) {
+                            const valueCharCode = sequence.charCodeAt(j);
+                            const value = this.#values[valueCharCode];
+                            if (value) {
+                                args.push(valueCharCode);
+                            } else {
+                                if (this.#operations[valueCharCode]) {
+                                    break;
+                                } else {
+                                    /**
+                                     * NOTE: Register unknown value symbols with a value of `null`.
+                                     * Enables handling of unknown value symbols appropriately.
+                                     */
+                                    this.registerValue(valueCharCode, null);
+                                    args.push(valueCharCode);
+                                }
+                            }
+                        }
+                        this.#sequenceData.push({
+                            id: this.#nextOperationId++,
+                            operation: operationCharCode,
+                            values: args,
+                        });
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Returns the sequence data array.
+     * 
+     * @method getSequenceData
+     * 
+     * @return {Array<Object>}
+     */
+    getSequenceData() {
+        return this.#sequenceData;
+    }
+
+    /**
      * Appends an operation and the corresponding values to the sequence data array and
      * computes the character sequence.
      * 
@@ -199,80 +273,6 @@ export default class OpString {
             return false;
         }
         return true;
-    }
-
-    /**
-     * Returns the character sequence.
-     * 
-     * @method getSequence
-     * 
-     * @returns {string}
-     */
-    getSequence() {
-        return this.#sequence;
-    }
-
-    /**
-     * Sets the character sequence and computes the sequence data array.
-     * 
-     * @method setSequence
-     * 
-     * @param {string} sequence - The character sequence that should be set.
-     */
-    setSequence(sequence) {
-        let caughtError = false;
-        try {
-            this.#validateArguments('setSequence', arguments);
-        } catch (error) {
-            caughtError = true;
-            this.#logError(error);
-        } finally {
-            if (! caughtError || (caughtError && ! this.#strictMode)) {
-                this.#sequence = sequence;
-                this.#sequenceData = [];
-                for (let i = 0; i < sequence.length; i++) {
-                    const operationCharCode = sequence.charCodeAt(i);
-                    const operation = this.#operations[operationCharCode];
-                    if (operation) {
-                        const args = [];
-                        for (let j = i+1; j < sequence.length; j++) {
-                            const valueCharCode = sequence.charCodeAt(j);
-                            const value = this.#values[valueCharCode];
-                            if (value) {
-                                args.push(valueCharCode);
-                            } else {
-                                if (this.#operations[valueCharCode]) {
-                                    break;
-                                } else {
-                                    /**
-                                     * NOTE: Register unknown value symbols with a value of `null`.
-                                     * Enables handling of unknown value symbols appropriately.
-                                     */
-                                    this.registerValue(valueCharCode, null);
-                                    args.push(valueCharCode);
-                                }
-                            }
-                        }
-                        this.#sequenceData.push({
-                            id: this.#nextOperationId++,
-                            operation: operationCharCode,
-                            values: args,
-                        });
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * Returns the sequence data array.
-     * 
-     * @method getSequenceData
-     * 
-     * @return {Array<Object>}
-     */
-    getSequenceData() {
-        return this.#sequenceData;
     }
 
     /**
