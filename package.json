@@ -1,10 +1,10 @@
 {
   "name": "opstring",
   "version": "0.1.0",
-  "type": "module",
   "description": "OpString is a JavaScript library for mapping and executing operations defined by character sequences.",
-  "author": "meezwhite",
   "license": "MIT",
+  "author": "meezwhite",
+  "type": "module",
   "main": "index.js",
   "files": [
     "dist",
