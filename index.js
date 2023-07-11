@@ -473,7 +473,7 @@ export default class OpString {
      */
     execute(sequence) {
         const sequence_isUndefined = sequence === undefined;
-        let caughtErrors = false;
+        let caughtError = false;
         try {
             if (sequence_isUndefined) {
                 this.#validateArguments('executeMain', [this.#sequence]);
@@ -481,10 +481,10 @@ export default class OpString {
                 this.#validateArguments('executeProvided', arguments);
             }
         } catch (error) {
-            caughtErrors = true;
+            caughtError = true;
             this.#logError(error);
         } finally {
-            if (! caughtErrors || (caughtErrors && ! this.#strictMode)) {
+            if (! caughtError || (caughtError && ! this.#strictMode)) {
                 if (sequence_isUndefined) {
                     this.#executeSequenceFromData();
                 } else {
