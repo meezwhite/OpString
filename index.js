@@ -50,7 +50,7 @@ export default class OpString {
      *      If defined, it must be a positive safe integer. (default: undefined)
      * @param {boolean} [config.ignoreWarnings] - Specifies whether warnings should be ignored.
      *      (default: false)
-     * @param {boolean} [config.strictMode] - Specifies the behavior of the library with regard to
+     * @param {boolean} [config.strictMode] - Specifies the behavior of the OpString with regard to
      *      errors. If set to `true`, errors will be logged; otherwise, warnings will be logged.
      *      Furthermore, if set to `true` the `maxSequenceLength` must strictly be adhered to,
      *      otherwise, the respective character sequence will not be executed. (default: false)
