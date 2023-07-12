@@ -1,28 +1,12 @@
 {
-  "name": "opstring",
+  "name": "opstringbuilder",
   "version": "0.1.0",
   "type": "module",
-  "description": "OpString is a JavaScript library for mapping and executing operations defined by character sequences.",
+  "description": "OpStringBuilder is a simple interface for OpString",
   "author": "meezwhite",
   "license": "MIT",
-  "main": "index.js",
-  "files": [
-    "dist",
-    "index.js"
-  ],
-  "scripts": {
-    "build:darwin": "mkdir -p dist; minify index.js > dist/OpString.min.js; cp LICENSE dist/OpString.LICENSE.txt"
-  },
-  "keywords": [
-    "javascript",
-    "operations",
-    "string",
-    "mapper",
-    "mapping",
-    "utf-8",
-    "utf-16",
-    "fxhash"
-  ],
+  "scripts": {},
+  "keywords": [],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/meezwhite/OpString.git"
@@ -34,5 +18,8 @@
   "devDependencies": {
     "alpinejs": "^3.12.2",
     "minify": "^9.2.0"
+  },
+  "dependencies": {
+    "opstring": "^0.1.0"
   }
 }

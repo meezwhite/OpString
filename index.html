@@ -13,17 +13,17 @@
     </script>
 </head>
 <body x-data="OpStringBuilder" x-cloak>
-    <h1>OpString</h1>
+    <h1>OpStringBuilder</h1>
     <a href="https://github.com/meezwhite/OpString" target="_blank">GitHub</a>
-    <p>OpString is a JavaScript library for mapping and executing operations defined by character sequences.</p>
+    <p>OpStringBuilder is a simple interface for OpString.</p>
     <div id="actions_wrapper">
-        <button @click="storeOperation">storeOperation</button>
-        <button @click="storeValue">storeValue</button>
-        <button @click="storeValuesRange">storeValuesRange</button>
+        <button @click="registerOperation">registerOperation</button>
+        <button @click="registerValue">registerValue</button>
+        <button @click="registerValuesRange">registerValuesRange</button>
     </div>
-    <div id="operations_sequence_wrapper">
+    <div id="sequence_wrapper">
         <h2>Operations Sequence</h2>
-        <p id="operations_sequence" x-text="sequence()"></p>
+        <p id="sequence" x-text="sequence()"></p>
         <div>Length: <span x-text="sequence().length"></span></div>
     </div>
     <div>

@@ -1,6 +1,5 @@
-import Alpine from './../node_modules/alpinejs/dist/module.esm.js';
-import OpString from './../index.js';
-// import { operations, values } from './OpStringStore.js';
+import Alpine from './node_modules/alpinejs/dist/module.esm.js';
+import OpString from './node_modules/opstring/dist/OpString.min.js';
 
 window.Alpine = Alpine;
 window.OpString = OpString;
@@ -113,16 +112,16 @@ document.addEventListener('alpine:init', () => {
             console.debug(str);
         },
 
-        storeOperation(event) {
-            console.debug('storeOperation');
+        registerOperation(event) {
+            console.debug('registerOperation');
         },
 
-        storeValue(event) {
-            console.debug('storeValue');
+        registerValue(event) {
+            console.debug('registerValue');
         },
 
-        storeValuesRange(event) {
-            console.debug('storeValuesRange');
+        registerValuesRange(event) {
+            console.debug('registerValuesRange');
         },
 
         operations() {
