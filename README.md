@@ -173,6 +173,8 @@ const opString = new OpString({
 <a name="api"></a>
 ## API
 
+*Note: OpString is still in the initial development phase and the API can still change. Always review the release notes.*
+
 OpString exposes the following properties and methods:
 
 ### Properties
