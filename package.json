@@ -11,7 +11,7 @@
     "index.js"
   ],
   "scripts": {
-    "build:darwin": "mkdir -p dist; minify index.js > dist/OpString.min.js; cp LICENSE dist/OpString.LICENSE.txt"
+    "build:darwin": "mkdir -p dist; minify index.js > dist/opstring.js; cp LICENSE dist/opstring.js.LICENSE.txt"
   },
   "keywords": [
     "javascript",
