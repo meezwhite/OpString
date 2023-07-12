@@ -53,7 +53,7 @@ export default class OpString {
      * @param {boolean} [config.strictMode] - Specifies the behavior of the OpString with regard to
      *      errors. If set to `true`, errors will be logged; otherwise, warnings will be logged.
      *      Furthermore, if set to `true` the `maxSequenceLength` must strictly be adhered to,
-     *      otherwise, the respective character sequence will not be executed. (default: false)
+     *      otherwise, the respective character sequence will not be set/executed. (default: false)
      */
     constructor(config) {
         try {
