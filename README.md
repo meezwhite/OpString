@@ -22,23 +22,38 @@ OpString is particularly useful in scenarios where data saving is crucial. By re
 <a name="getting-started"></a>
 ## Getting Started
 
+### Using a bundler
+
 Install OpString using `npm`:
 
 ```bash
 npm install opstring
 ```
 
-<a name="usage"></a>
-## Usage
-
-You can import OpString into your project using the `import` statement, then create a new instance.
+Import OpString into your project using the `import` statement.
 
 ```js
 import OpString from 'opstring';
-
-// Create a new instance
-const opString = new OpString();
 ```
+
+### Without a bundler
+
+Download the latest version from [Releases](https://github.com/meezwhite/OpString/releases)
+
+Import OpString into your project using the `import` statement, referencing `opstring.js`.
+
+```js
+import OpString from 'opstring.js';
+```
+
+Make sure that the `<script>` tag that embeds the JavaScript file where OpString is imported has the `type="module"` attribute.
+
+```html
+<script src="app.js" type="module"></script>
+```
+
+<a name="usage"></a>
+## Usage
 
 When using OpString, there are mainly three steps involved:
 1. Register operations and values
@@ -52,8 +67,6 @@ OpString provides flexibility in managing these steps. Below, you will find two 
 With this approach, you start with an empty OpString instance and register operations and values as needed. Then, you compose the character sequence by appending, inserting, prepending and removing operations and their corresponding values.
 
 ```js
-import OpString from 'opstring';
-
 // Create an empty OpString instance
 const opString = new OpString();
 
