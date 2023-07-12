@@ -84,15 +84,16 @@ export default class OpString {
     }
 
     /**
-     * Appends an operation and the corresponding values to the sequence data array and
-     * computes the character sequence.
+     * Appends an operation to the sequence and returns the id of the appended operation.
      * 
      * @method append
      * 
-     * @param {string|number} operation - The character code of the operation to be appended.
-     * @param {Array<string|number>} [values] - An array with the characters or character
-     *      codes of the values corresponding to the operation to be appended.
-     * @returns {number|null} The id of the appended operation.
+     * @param {string|number} operation - The character or character code of the operation to be
+     *      appended.
+     * @param {Array<string|number>} [values] - An array with the characters or character codes
+     *      of the values corresponding to the operation to be appended.
+     * @returns {number|null} - The id of the appended operation or `null` if the operation
+     *      wasn't appended.
      */
     append(operation, values) {
         const operationId = this.#nextOperationId;
@@ -113,17 +114,18 @@ export default class OpString {
     }
 
     /**
-     * Inserts an operation and the corresponding values to the sequence data array at the specified
-     * index and computes the character sequence.
+     * Inserts an operation to the sequence at the specified index and returns the id of the
+     * inserted operation.
      * 
      * @method insert
      * 
      * @param {number} index - The index at which the operation should be added.
      * @param {string|number} operation - The character or character code of the operation to be
-     *      added.
+     *      inserted.
      * @param {Array<string|number>} [values] - An array with the characters or character codes of
-     *      the values corresponding to the operation to be added.
-     * @returns {number|null} The id of the inserted operation.
+     *      the values corresponding to the operation to be inserted.
+     * @returns {number|null} - The id of the inserted operation or `null` if the operation
+     *      wasn't inserted.
      */
     insert(index, operation, values) {
         const operationId = this.#nextOperationId;
@@ -144,15 +146,16 @@ export default class OpString {
     }
 
     /**
-     * Prepends an operation and the corresponding values to the sequence data array and computes
-     * the character sequence.
+     * Prepends an operation to the sequence and returns its id.
      * 
      * @method prepend
      * 
-     * @param {string|number} operation - The character code of the operation to be prepended.
-     * @param {Array<string|number>} [values] - An array with the character codes of the values
-     *      corresponding to the operation to be prepended.
-     * @returns {number|null} The id of the prepended operation.
+     * @param {string|number} operation - The character or character code of the operation to be
+     *      prepended.
+     * @param {Array<string|number>} [values] - An array with the characters or character codes of
+     *      the values corresponding to the operation to be prepended.
+     * @returns {number|null} - The id of the prepended operation or `null` if the operation
+     *      wasn't prepended.
      */
     prepend(operation, values) {
         const operationId = this.#nextOperationId;
@@ -173,16 +176,15 @@ export default class OpString {
     }
 
     /**
-     * Removes the operation with the specified id from the sequence data array and computes the
-     * character sequence.
+     * Removes the operation with the specified id from the sequence.
      * 
      * @method remove
      * 
      * @param {number} id - The id of the operation that should be removed.
      * 
-     * @throws {ReferenceError} If there is no operation with the specified id.
+     * @throws {ReferenceError} - If there is no operation with the specified id.
      * 
-     * @returns {boolean} Whether the respective operation has been removed.
+     * @returns {boolean} - If the respective operation was removed `true`, otherwise `false`.
      */
     remove(id) {
         try {
@@ -202,18 +204,63 @@ export default class OpString {
     }
 
     /**
-     * Returns the character sequence.
+     * Computes the character code of the provided value.
      * 
-     * @method getSequence
+     * @private
+     * @method computeCharCode
      * 
-     * @returns {string}
+     * @param {*} value - The value for which the character code should be computed.
+     * @returns {*} - If the provided value is a string, the character code of the first position
+     *      of the string is computed; otherwise, the provided value is returned back.
      */
-    getSequence() {
-        return this.#sequence;
+    #computeCharCode(value) {
+        if (this.#getSymbolType(value) === this.#symbolTypeString) {
+            return value.charCodeAt(0);
+        }
+        return value;
     }
 
     /**
-     * Sets the character sequence and computes the sequence data array.
+     * Computes an array of character codes given the provided values.
+     *
+     * @private
+     * @method computeCharCodes
+     * 
+     * @param {Array<*>} values - The array of values for which character codes should be computed.
+     * @returns {Array<number|null>} - An array of character codes. If a character code cannot be
+     *      computed, `null` will be used instead.
+     */
+    #computeCharCodes(values) {
+        if (values !== undefined) {
+            return values.map((value) => {
+                const symbolType = this.#getSymbolType(value);
+                if (symbolType === this.#symbolTypeString) {
+                    return value.charCodeAt(0);
+                } else if (symbolType === this.#symbolTypeInteger) {
+                    return value;
+                }
+                return null;
+            });
+        }
+        return [];
+    }
+
+    /**
+     * Computes the character sequence from the sequence data array.
+     */
+    #computeSequence() {
+        let sequence = '';
+        for (let i = 0; i < this.#sequenceData.length; i++) {
+            sequence += String.fromCharCode(this.#sequenceData[i].operation);
+            for (let j = 0; j < this.#sequenceData[i].values.length; j++) {
+                sequence += String.fromCharCode(this.#sequenceData[i].values[j]);
+            }
+        }
+        this.#sequence = sequence;
+    }
+
+    /**
+     * Sets the character sequence.
      * 
      * @method setSequence
      * 
@@ -265,43 +312,25 @@ export default class OpString {
     }
 
     /**
+     * Returns the character sequence.
+     * 
+     * @method getSequence
+     * 
+     * @returns {string} - The character sequence
+     */
+    getSequence() {
+        return this.#sequence;
+    }
+
+    /**
      * Returns the sequence data array.
      * 
      * @method getSequenceData
      * 
-     * @return {Array<Object>}
+     * @return {Array<Object>} - The sequence data array
      */
     getSequenceData() {
         return this.#sequenceData;
-    }
-
-    /**
-     * Returns the registered operations.
-     * 
-     * @method getOperations
-     * 
-     * @returns {Object}
-     */
-    getOperations() {
-        return this.#operations;
-    }
-
-    /**
-     * Registers the operation mappings provided by the `operations` object.
-     * Previously registered operation mappings will be deleted.
-     * 
-     * @method setOperations
-     * 
-     * @param {Object} operations - Object containing new operation mappings to be registered.
-     */
-    setOperations(operations) {
-        try {
-            this.#validateArguments('setOperations', arguments);
-            this.#operations = {};
-            this.#registerOperationsInternal(operations);
-        } catch (error) {
-            this.#logError(error);
-        }
     }
 
     /**
@@ -331,7 +360,8 @@ export default class OpString {
      * 
      * @method registerOperations
      * 
-     * @param {Object} operations - Object containing the operation mappings to be registered.
+     * @param {Object} operations - Object containing additional operation mappings to be
+     *      registered.
      */
     registerOperations(operations) {
         try {
@@ -355,6 +385,35 @@ export default class OpString {
         for (const [symbol, callback] of Object.entries(operations)) {
             this.registerOperation(symbol, callback);
         }
+    }
+
+    /**
+     * Registers the operation mappings provided by the `operations` object. Previously registered
+     * operation mappings will be deleted.
+     * 
+     * @method setOperations
+     * 
+     * @param {Object} operations - Object containing new operation mappings to be registered.
+     */
+    setOperations(operations) {
+        try {
+            this.#validateArguments('setOperations', arguments);
+            this.#operations = {};
+            this.#registerOperationsInternal(operations);
+        } catch (error) {
+            this.#logError(error);
+        }
+    }
+
+    /**
+     * Returns the registered operations.
+     * 
+     * @method getOperations
+     * 
+     * @returns {Object} - The registered operations
+     */
+    getOperations() {
+        return this.#operations;
     }
 
     /**
@@ -384,7 +443,7 @@ export default class OpString {
      * 
      * @method registerValues
      * 
-     * @param {Object} values - Object containing the value mappings to be registered.
+     * @param {Object} values - Object containing additional value mappings to be registered.
      */
     registerValues(values) {
         try {
@@ -411,19 +470,8 @@ export default class OpString {
     }
 
     /**
-     * Returns the registered values.
-     * 
-     * @method getValues
-     * 
-     * @returns {Object}
-     */
-    getValues() {
-        return this.#values;
-    }
-
-    /**
-     * Registers the value mappings provided by the `values` object.
-     * Previously registered value mappings will be deleted.
+     * Registers the value mappings provided by the `values` object. Previously registered
+     * value mappings will be deleted.
      * 
      * @method setValues
      * 
@@ -440,15 +488,14 @@ export default class OpString {
     }
 
     /**
-     * Returns the configured `maxSequenceLength` value. If the `maxSequenceLength` has not been
-     * configured, `undefined` is returned.
+     * Returns the registered values.
      * 
-     * @method getMaxSequenceLength
+     * @method getValues
      * 
-     * @returns {number|undefined}
+     * @returns {Object} - The registered values
      */
-    getMaxSequenceLength() {
-        return this.#maxSequenceLength;
+    getValues() {
+        return this.#values;
     }
 
     /**
@@ -456,7 +503,7 @@ export default class OpString {
      * 
      * @method setMaxSequenceLength
      * 
-     * @param {number} maxSequenceLength 
+     * @param {number} maxSequenceLength - The maximum allowed sequence length
      */
     setMaxSequenceLength(maxSequenceLength) {
         try {
@@ -465,6 +512,19 @@ export default class OpString {
         } catch (error) {
             this.#logError(error);
         }
+    }
+
+    /**
+     * Returns the `maxSequenceLength` value. If the `maxSequenceLength` has not been
+     * configured, `undefined` is returned.
+     * 
+     * @method getMaxSequenceLength
+     * 
+     * @returns {number|undefined} - The configured `maxSequenceLength` value, or `undefined` if
+     *      not configured.
+     */
+    getMaxSequenceLength() {
+        return this.#maxSequenceLength;
     }
 
     /**
@@ -564,20 +624,6 @@ export default class OpString {
     }
 
     /**
-     * Computes the character sequence from the sequence data array.
-     */
-    #computeSequence() {
-        let sequence = '';
-        for (let i = 0; i < this.#sequenceData.length; i++) {
-            sequence += String.fromCharCode(this.#sequenceData[i].operation);
-            for (let j = 0; j < this.#sequenceData[i].values.length; j++) {
-                sequence += String.fromCharCode(this.#sequenceData[i].values[j]);
-            }
-        }
-        this.#sequence = sequence;
-    }
-
-    /**
      * Checks the type of a symbol and returns the corresponding symbol type.
      * 
      * Returns:
@@ -599,48 +645,6 @@ export default class OpString {
             return this.#symbolTypeString;
         }
         return this.#symbolTypeInvalid;
-    }
-
-    /**
-     * Computes the character code of the provided value.
-     * 
-     * @private
-     * @method computeCharCode
-     * 
-     * @param {*} value - The value for which the character code should be computed.
-     * @returns {*} If the provided value is a string, the character code of the first position
-     *      of the string is computed; otherwise, the provided value is returned back.
-     */
-    #computeCharCode(value) {
-        if (this.#getSymbolType(value) === this.#symbolTypeString) {
-            return value.charCodeAt(0);
-        }
-        return value;
-    }
-
-    /**
-     * Computes an array of character codes given the provided values.
-     *
-     * @private
-     * @method computeCharCodes
-     * 
-     * @param {Array<*>} values - The array of values for which character codes should be computed.
-     * @returns {Array<number|null>} An array of character codes. If a character code cannot be
-     *      computed, `null` will be used instead.
-     */
-    #computeCharCodes(values) {
-        if (values !== undefined) {
-            return values.map((value) => {
-                const symbolType = this.#getSymbolType(value);
-                if (symbolType === this.#symbolTypeString) {
-                    return value.charCodeAt(0);
-                } else if (symbolType === this.#symbolTypeInteger) {
-                    return value;
-                }
-                return null;
-            });
-        }
-        return [];
     }
 
     /**
@@ -745,7 +749,7 @@ export default class OpString {
      * @param {string} method - The method for which the arguments should be checked.
      * @param {Array<*>} args - The user provided arguments to the respective method to be checked.
      * 
-     * @throws {TypeError} If the arguments are of an invalid type:
+     * @throws {TypeError} - If the arguments are of an invalid type:
      *      - `constructor`: If the `config` parameter is empty, not a plain object or doesn't have valid keys, or if the config object properties are of an invalid type.
      *      - `insert`: If the `index` parameter is not a non-negative integer.
      *      - `append`, `insert` and `prepend`: If the `values` parameter is not an array or an empty array.
@@ -758,16 +762,14 @@ export default class OpString {
      *      - `setMaxSequenceLength`: If the `maxSequenceLength` parameter is not a positive safe integer.
      *      - `execute`: If the character sequence of the current instance or the `sequence` parameter is not a string.
      * 
-     * @throws {SyntaxError} If the arguments have syntax errors:
+     * @throws {SyntaxError} - If the arguments have syntax errors:
      *      - `append`, `insert` and `prepend`: If the `values` parameter contains invalid symbols.
      *      - `append`, `insert`, `prepend`, `registerOperation` and `registerValue`: If the `symbol` parameter is a string but not a single character.
      *      - `execute`: If the sequence to be executed is empty.
      * 
-     * @throws {RangeError} If the arguments are out of valid range:
+     * @throws {RangeError} - If the arguments are out of valid range:
      *      - `append`, `insert`, `prepend`, `registerOperation` and `registerValue`: If the `symbol` parameter is an integer but out of range.
      *      - `execute`: If the character sequence of the current instance or the `sequence` parameter exceeds the configured `maxSequenceLength`.
-     * 
-     * @returns {boolean}
      */
     #validateArguments(method, args) {
         let introMsg;
