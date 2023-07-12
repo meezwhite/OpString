@@ -1,6 +1,6 @@
 # OpString
 
-OpString is a JavaScript library for mapping and executing operations defined by character sequences.
+OpString is a JavaScript module for mapping and executing operations represented by character sequences.
 
 ## Table of Contents
 
@@ -15,9 +15,11 @@ OpString is a JavaScript library for mapping and executing operations defined by
 <a name="introduction"></a>
 ## Introduction
 
-Consider the character sequence `AaabBabcc`. When executed, OpString calls the mapped functions `circle(30, 30, 20)` and `rect(30, 20, 55, 55)` with the corresponding values. OpString simplifies the process of mapping characters to functions and values, composing character sequences that represent operations and executing them accordingly.
+OpString simplifies the process of mapping characters to operations and values, and provides functionality to compose character sequences and execute the respective mapped operations.
 
-OpString is particularly useful in scenarios where data saving is crucial. By representing operations using compact character sequences, OpString enables creative coders to pack more functionality into less data, optimizing storage efficiency.
+OpString is particularly useful in scenarios where data saving is crucial. By representing operations using compact character sequences, OpString enables you to pack more functionality into less data, optimizing storage efficiency.
+
+For example, let's say you have the operations `circle(30, 30, 20)` and `rect(30, 20, 55, 55)` that you would like to store as a string for later use. Your string could look something like this `circle(30,30,20);rect(30,20,55,55)` and would be 34 characters long. With OpString you could represent the same operations with the character sequence `AaabBabcc`, which would shorten it to 9 characters.
 
 <a name="getting-started"></a>
 ## Getting Started
@@ -38,15 +40,17 @@ import OpString from 'opstring';
 
 ### Without a bundler
 
-Download the latest version from [Releases](https://github.com/meezwhite/OpString/releases)
+Download the latest version from [Releases](https://github.com/meezwhite/OpString/releases).
 
 Import OpString into your project using the `import` statement, referencing `opstring.js`.
 
 ```js
+// app.js
+
 import OpString from 'opstring.js';
 ```
 
-Make sure that the `<script>` tag that embeds the JavaScript file where OpString is imported has the `type="module"` attribute.
+Make sure that the `<script>` tag, which embeds the JavaScript file containing the import of OpString, has the attribute `type="module"`.
 
 ```html
 <script src="app.js" type="module"></script>
@@ -60,52 +64,9 @@ When using OpString, there are mainly three steps involved:
 2. Compose character sequence
 3. Execute character sequence
 
-OpString provides flexibility in managing these steps. Below, you will find two approaches for using OpString, which can be combined as needed.
+OpString provides flexibility in managing these steps. Below, you will find two approaches for using OpString, which **can be combined as needed**.
 
-### Approach 1: Register Operations and Values as Needed
-
-With this approach, you start with an empty OpString instance and register operations and values as needed. Then, you compose the character sequence by appending, inserting, prepending and removing operations and their corresponding values.
-
-```js
-// Create an empty OpString instance
-const opString = new OpString();
-
-// Register operations
-opString.registerOperation('A', (x, y, d) => { console.log(x, y, d); });
-opString.registerOperation('B', (x, y, w, h) => { console.log(x, y, w, h); });
-// Alternatives: `registerOperations` and `setOperations`
-
-// Register values
-opString.registerValue('a', 30);
-opString.registerValue('b', 20);
-opString.registerValue('c', 55);
-// Alternatives: `registerValues` and `setValues`
-
-// Compose the character sequence
-opString.append('A', ['a', 'a', 'b']);
-opString.append('B', ['a', 'b', 'c', 'c']);
-// Alternative: `setSequence`
-
-// Set the maximum sequence length
-opString.setMaxSequenceLength(10);
-
-// Insert an operation at a specific position
-const operationId = opString.insert(1, 'B', ['a', 'b', 'c', 'c']);
-
-// Remove an operation by its ID
-opString.remove(operationId);
-
-console.debug(opString.getSequence());
-// Expected output: 'AaabBabcc'
-
-// Execute the composed sequence
-opString.execute();
-
-// Execute a custom sequence
-opString.execute('Babcc');
-```
-
-### Approach 2: Define Everything When Creating the OpString Instance
+### Approach 1: Define Everything When Creating the OpString Instance
 
 With this approach, you register operations and values, and specify the character sequence when creating the OpString instance.
 
@@ -132,6 +93,52 @@ opString.execute('Babcc');
 
 *Note: The properties `ignoreWarnings` and `strictMode` can only be configured when creating an OpString instance. (see [Error Handling](#error-handling))*
 
+### Approach 2: Register Operations and Values as Needed
+
+With this approach, you start with an empty OpString instance and register operations and values as needed. Then, you compose the character sequence by appending, inserting, prepending and removing operations and their corresponding values.
+
+```js
+// Create an empty OpString instance
+const opString = new OpString();
+
+// Set the maximum sequence length
+opString.setMaxSequenceLength(10);
+
+// Register operations
+opString.registerOperation('A', (x, y, d) => { console.log(x, y, d); });
+opString.registerOperation('B', (x, y, w, h) => { console.log(x, y, w, h); });
+// Alternatives: `registerOperations` and `setOperations`
+
+// Register values
+opString.registerValue('a', 30);
+opString.registerValue('b', 20);
+opString.registerValue('c', 55);
+// Alternatives: `registerValues` and `setValues`
+
+// Compose the character sequence
+opString.append('A', ['a', 'a', 'b']);
+opString.append('B', ['a', 'b', 'c', 'c']);
+// Alternative: `setSequence`
+
+// Insert an operation at a specific position
+const operationId = opString.insert(1, 'X', ['x', 'y', 'z']);
+
+console.debug(opString.getSequence());
+// Expected output: 'AaabXxyzBabcc'
+
+// Remove an operation by its id
+opString.remove(operationId);
+
+console.debug(opString.getSequence());
+// Expected output: 'AaabBabcc'
+
+// Execute the composed sequence
+opString.execute();
+
+// Execute a custom sequence
+opString.execute('Babcc');
+```
+
 <a name="error-handling"></a>
 ## Error Handling
 
@@ -152,7 +159,7 @@ const opString = new OpString({
 
 To enable `strictMode`, you can set `strictMode` to `true` when creating an OpString instance.
 
-In `strictMode`, OpString will log errors instead of warnings to the console. Furthermore, OpString will not be as graceful anymore and certain functionalities like `setSequence` or `execute` will not work when errors, such as exceeding the `maxSequenceLength` limit, occur.
+In `strictMode` OpString will log errors instead of warnings to the console. Furthermore, OpString will not be as graceful anymore and certain functionalities like `setSequence` or `execute` will not work when errors occur, such as exceeding the `maxSequenceLength` limit.
 
 ```js
 // Create an OpString instance with `strictMode` enabled
@@ -161,7 +168,7 @@ const opString = new OpString({
 });
 ```
 
-*Note: In `strictMode`, the `ignoreWarnings` property is irrelevant as warnings are never logged.*
+*Note: In `strictMode` the `ignoreWarnings` property is irrelevant as warnings are never logged.*
 
 <a name="api"></a>
 ## API
@@ -246,7 +253,7 @@ const operationId = opString.append('V');
 opString.append('A', ['a', 'a', 'b']);
 
 /**
- * Use character codes instead of characters: 'A'.charCodeAt(0) => 65
+ * Alternatively, you can use character codes instead of characters (e.g. 'A'.charCodeAt(0) => 65).
  * This will also append 'Aaab' to the sequence.
  */
 opString.append(65, [97, 97, 98]);
@@ -288,7 +295,7 @@ const operationId = opString.insert(2, 'V');
 opString.insert(2, 'A', ['a', 'a', 'b']);
 
 /**
- * Use character codes instead of characters: 'A'.charCodeAt(0) => 65
+ * Alternatively, you can use character codes instead of characters (e.g. 'A'.charCodeAt(0) => 65).
  * This will also insert 'Aaab' at index 2 of the sequence.
  */
 opString.insert(2, 65, [97, 97, 98]);
@@ -323,7 +330,7 @@ const operationId = opString.prepend('V');
 opString.prepend('A', ['a', 'a', 'b']);
 
 /**
- * Use character codes instead of characters: 'A'.charCodeAt(0) => 65
+ * Alternatively, you can use character codes instead of characters (e.g. 'A'.charCodeAt(0) => 65).
  * This will also prepend 'Aaab' to the sequence.
  */
 opString.prepend(65, [97, 97, 98]);
@@ -578,7 +585,7 @@ opString.registerValues({
     'z': 12,
 });
 
-// Register additional value mappings using character codes
+// Alternatively, you can register additional value mappings using character codes
 opString.registerValues({
     120: 10,
     121: 11,
@@ -609,7 +616,7 @@ opString.setValues({
     'c': 3,
 });
 
-// Set new value mappings using character codes
+// Alternatively, you can set new value mappings using character codes
 opString.setValues({
     97: 1,
     98: 2,
