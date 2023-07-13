@@ -522,7 +522,7 @@ export default class OpString {
      * Returns the corresponding character code for the provided value, if the value is registered.
      * 
      * @param {*} value - The value for which a coresponding character code should be returned.
-     * @returns {string|undefined} - If the value is registered, the corresponding character code
+     * @returns {number|undefined} - If the value is registered, the corresponding character code
      *      is returned; otherwise `undefined`.
      */
     getCharCodeForValue(value) {

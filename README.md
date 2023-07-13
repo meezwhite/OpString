@@ -707,7 +707,7 @@ const charCode = opString.getCharCodeForValue(55);
 
 #### Returns
 
-`string|undefined` - If the value is registered, the corresponding character code is returned; otherwise `undefined`.
+`number|undefined` - If the value is registered, the corresponding character code is returned; otherwise `undefined`.
 
 </br>
 </details>
