@@ -1,4 +1,4 @@
-import OpString from 'opstring/dist/opstring.js';
+import OpString from './dist/opstring.js';
 
 /**
  * Example 1
