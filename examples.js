@@ -1,4 +1,5 @@
 import OpString from './dist/opstring.js';
+// import OpString from './index.js';
 
 /**
  * Example 1
@@ -25,6 +26,14 @@ const opString = new OpString({
 });
 
 console.log(opString.getValues());
+// Output:
+// { '97': 30, '98': 20, '99': 55 }
+
+console.log(opString.getCharForValue(55));
+// Output: 'c'
+
+console.log(opString.getCharCodeForValue(55));
+// Output: 99
 
 opString.execute();
 
