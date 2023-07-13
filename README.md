@@ -115,6 +115,10 @@ opString.registerValue('b', 20);
 opString.registerValue('c', 55);
 // Alternatives: `registerValues` and `setValues`
 
+// Get symbols for values
+const char = opString.getCharForValue(55); // Returns: 'c'
+const charCode = opString.getCharCodeForValue(55); // Returns: 99
+
 // Compose the character sequence
 opString.append('A', ['a', 'a', 'b']);
 opString.append('B', ['a', 'b', 'c', 'c']);
@@ -652,6 +656,58 @@ const values = opString.getValues();
 #### Returns
 
 `Object` - The registered values.
+
+</br>
+</details>
+
+<details>
+<summary><code>getCharForValue(value)</code></summary>
+<br>Returns the corresponding character for the provided value, if the value is registered.
+
+#### Examples
+
+```js
+// Get the corresponding character for the provided value
+const char = opString.getCharCodeForValue(55);
+
+// Example output: 'c'
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `value` | `*` | The value for which a coresponding character should be returned. |
+
+#### Returns
+
+`string|undefined` - If the value is registered, the corresponding character is returned; otherwise `undefined`.
+
+</br>
+</details>
+
+<details>
+<summary><code>getCharCodeForValue(value)</code></summary>
+<br>Returns the corresponding character code for the provided value, if the value is registered.
+
+#### Examples
+
+```js
+// Get the corresponding charCode for the provided value
+const charCode = opString.getCharCodeForValue(55);
+
+// Example output: 99
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `value` | `*` | The value for which a coresponding character code should be returned. |
+
+#### Returns
+
+`string|undefined` - If the value is registered, the corresponding character code is returned; otherwise `undefined`.
 
 </br>
 </details>
