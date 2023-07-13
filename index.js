@@ -499,6 +499,49 @@ export default class OpString {
     }
 
     /**
+     * Returns the corresponding character for the provided value, if the value is registered.
+     * 
+     * @param {*} value - The value for which a coresponding character should be returned.
+     * @returns {string|undefined} - If the value is registered, the corresponding character
+     *      is returned; otherwise `undefined`.
+     */
+    getCharForValue(value) {
+        try {
+            this.#validateArguments('getCharForValue', arguments);
+            const charCode = this.getCharCodeForValue(value);
+            if (charCode !== undefined) {
+                return String.fromCharCode(charCode);
+            }
+        } catch (error) {
+            this.#logError(error);
+        }
+        return undefined;
+    }
+
+    /**
+     * Returns the corresponding character code for the provided value, if the value is registered.
+     * 
+     * @param {*} value - The value for which a coresponding character code should be returned.
+     * @returns {string|undefined} - If the value is registered, the corresponding character code
+     *      is returned; otherwise `undefined`.
+     */
+    getCharCodeForValue(value) {
+        try {
+            this.#validateArguments('getCharCodeForValue', arguments);
+            const keys = Object.keys(this.#values);
+            for (let i = 0; i < keys.length; i++) {
+                const key = keys[i];
+                if (this.#values[key] === value) {
+                    return key;
+                }
+            }
+        } catch (error) {
+            this.#logError(error);
+        }
+        return undefined;
+    }
+
+    /**
      * Sets the maximum allowed sequence limit.
      * 
      * @method setMaxSequenceLength
@@ -759,6 +802,7 @@ export default class OpString {
      *      - `registerOperations`: If the `operations` parameter is empty or not a plain object.
      *      - `registerValue`: If the `value` parameter is `undefined`.
      *      - `registerValues`: If the `values` parameter is empty or not a plain object.
+     *      - `getCharForValue` and `getCharCodeForValue`: If the `value` parameter is `undefined`.
      *      - `setMaxSequenceLength`: If the `maxSequenceLength` parameter is not a positive safe integer.
      *      - `execute`: If the character sequence of the current instance or the `sequence` parameter is not a string.
      * 
@@ -937,6 +981,13 @@ export default class OpString {
                 }
                 if (! this.#isValidStoreObject(args[0])) {
                     throw new TypeError(`Cannot ${method}, since the '${registerParamName}' parameter must be a non-empty plain object.`);
+                }
+                break;
+
+            case 'getCharForValue':
+            case 'getCharCodeForValue':
+                if (args[0] === undefined) {
+                    throw new TypeError(`Cannot get character${method === 'getCharForValue' ? '' : ' code'} for undefined value.`);
                 }
                 break;
 
