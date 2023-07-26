@@ -621,7 +621,7 @@ export default class OpString {
                 for (let j = i+1; j < sequence.length; j++) {
                     const valueCharCode = sequence.charCodeAt(j);
                     const value = this.#values[valueCharCode];
-                    if (value) {
+                    if (value !== undefined) {
                         args.push(value);
                     } else {
                         if (this.#operations[valueCharCode]) {
@@ -651,7 +651,7 @@ export default class OpString {
                 for (let j = 0; j < this.#sequenceData[i].values.length; j++) {
                     const valueCharCode = this.#sequenceData[i].values[j];
                     const value = this.#values[valueCharCode];
-                    if (value) {
+                    if (value !== undefined) {
                         args.push(value);
                     } else {
                         if (this.#operations[valueCharCode]) {
