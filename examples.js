@@ -18,13 +18,23 @@ const values = {
     'a': 30,
     'b': 20,
     'c': 55,
+};
+const labels = {
+    'circle': 'A',
+    'rect': 'B',
+    'thirty': 'a',
+    'twenty': 'b',
+    'fifty-five': 'c',
 }
 const opString = new OpString({
     sequence: 'AaabBabcc',
     operations,
     values,
+    labels,
 });
 
+
+// Values
 console.log(opString.getValues());
 // Output:
 // { '97': 30, '98': 20, '99': 55 }
@@ -34,6 +44,22 @@ console.log(opString.getCharForValue(55));
 
 console.log(opString.getCharCodeForValue(55));
 // Output: 99
+
+
+// Labels
+console.log(opString.getLabels());
+// Output:
+// { 'circle': 65, 'rect': 66, 'thirty': 97, 'twenty': 98, 'fifty-five': 99 }
+
+console.log(opString.getCharForLabel('circle'));
+// Output: 'A'
+
+console.log(opString.getCharCodeForLabel('circle'));
+// Output: 65
+
+console.log(opString.getCharForLabel('seventy-seven'));
+// Output: undefined
+
 
 opString.execute();
 
@@ -45,11 +71,12 @@ opString.execute();
 /**
  * Example 2
  */
-console.log('\n--- Example 2 (registerOperation, registerValue, setSequence) ---\n');
+console.log('\n--- Example 2 (registerOperation, registerValue, registerLabel, setSequence) ---\n');
 
 opString.registerOperation('C', (x1, y1, x2, y2, x3, y3) => {
     console.log(`> triangle(${x1}, ${y1}, ${x2}, ${y2}, ${x3}, ${y3})`);
 });
+opString.registerLabel('triangle', 'C');
 
 opString.registerValue('d', 75);
 opString.registerValue('e', 58);
@@ -100,7 +127,12 @@ console.log(opString.getSequence());
  */
 console.log('\n--- Example 5 (append) ---\n');
 
+const operationChar = opString.getCharForLabel('circle'); // Returns: 'A'
+const operationCharCode = opString.getCharCodeForLabel('circle'); // Returns: 65
+
 const appendedId = opString.append('A', ['a', 'a', 'b']);
+// const appendedId = opString.append(operationChar, ['a', 'a', 'b']);
+// const appendedId = opString.append(operationCharCode, ['a', 'a', 'b']);
 opString.execute();
 
 // Output:
