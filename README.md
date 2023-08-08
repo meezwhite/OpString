@@ -381,6 +381,30 @@ const removed = opString.remove(3);
 </details>
 
 <details>
+<summary><code>index(id)</code></summary>
+<br>Returns the index of the operation with the provided id in the sequence.
+
+#### Examples
+
+```js
+// Get the index of operation with id 3 in the sequence
+const operationIndex = opString.index(3);
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `id` | `number` | The id of the operation in the sequence for which the index should be returned. |
+
+#### Returns
+
+`number|null` - Index of the operation in the sequence, or `null` if not found.
+
+</br>
+</details>
+
+<details>
 <summary><code>setSequence(sequence)</code></summary>
 <br>Sets the character sequence.
 
