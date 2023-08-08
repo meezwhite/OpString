@@ -274,7 +274,7 @@ opString.append(65, [97, 97, 98]);
 
 #### Returns
 
-`number|null` - The id of the appended operation or `null` if the operation wasn't appended.
+`number|boolean` - The id of the appended operation or `false` if the operation wasn't appended.
 
 </br>
 </details>
@@ -317,7 +317,7 @@ opString.insert(2, 65, [97, 97, 98]);
 
 #### Returns
 
-`number|null` - The id of the inserted operation or `null` if the operation wasn't inserted.
+`number|boolean` - The id of the inserted operation or `false` if the operation wasn't inserted.
 
 </br>
 </details>
@@ -351,7 +351,7 @@ opString.prepend(65, [97, 97, 98]);
 
 #### Returns
 
-`number|null` - The id of the prepended operation or null if the operation wasn't prepended.
+`number|boolean` - The id of the prepended operation or `false` if the operation wasn't prepended.
 
 </br>
 </details>
