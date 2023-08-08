@@ -179,7 +179,7 @@ opString.registerOperation('G', (log) => {
     console.log(`> ${log}`);
 });
 opString.registerValue('g', 'Inserted operation at index 1');
-if (operationIndex !== null) {
+if (operationIndex !== undefined) {
     const insertedId = opString.insert(operationIndex, 'G', ['g']);
 }
 opString.execute();
