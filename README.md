@@ -772,7 +772,7 @@ opString.registerLabel('circle', 65);
 | Parameter | Type | Description |
 | --- | --- | --- |
 | `label` | `string` | The label to represent the provided symbol. |
-| `symbol` | `string|number` | The character or character code to be mapped to the label. |
+| `symbol` | `string\|number` | The character or character code to be mapped to the label. |
 
 </br>
 </details>
