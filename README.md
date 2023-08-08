@@ -240,7 +240,15 @@ const opString = new OpString({
         'A': (x, y, d) => { console.log(x, y, d); },
         'B': (x, y, w, h) => { console.log(x, y, w, h); },
     },
-    values: { 'a': 30, 'b': 20, 'c': 55 },
+    values: {
+        'a': 30,
+        'b': 20,
+        'c': 55,
+    },
+    labels: {
+        'circle': 'A',
+        'rect': 'B',
+    },
     maxSequenceLength: 10,
     ignoreWarnings: false, // (default: false)
     strictMode: true, // (default: false)
@@ -255,6 +263,7 @@ const opString = new OpString({
 | `config.sequence?` | `string` | (Optional) The character sequence to be executed when `execute` is called without providing a sequence parameter. (default: '') |
 | `config.operations?` | `Object` | (Optional) Object containing the operation mappings to be registered. (default: {}) |
 | `config.values?` | `string` | (Optional) Object containing the value mappings to be registered. (default: {}) |
+| `config.labels?` | `string` | (Optional) Object containing the label mappings to be registered. (default: {}) |
 | `config.maxSequenceLength?` | `string` | (Optional) Specifies a maximum allowed sequence length. If defined, it must be a positive safe integer. (default: undefined) |
 | `config.ignoreWarnings?` | `string` | (Optional) Specifies whether warnings should be ignored. (default: false) |
 | `config.strictMode?` | `string` | (Optional) Specifies the behavior of the OpString with regard to errors. If set to `true`, errors will be logged; otherwise, warnings will be logged. Furthermore, if set to `true` the `maxSequenceLength` must strictly be adhered to, otherwise, the respective character sequence will not be set/executed. (default: false) |
