@@ -99,7 +99,7 @@ export default class OpString {
      *      appended.
      * @param {Array<string|number>} [values] - An array with the characters or character codes
      *      of the values corresponding to the operation to be appended.
-     * @returns {number|null} - The id of the appended operation or `null` if the operation
+     * @returns {number|boolean} - The id of the appended operation or `false` if the operation
      *      wasn't appended.
      */
     append(operation, values) {
@@ -117,7 +117,7 @@ export default class OpString {
         } catch (error) {
             this.#logError(error);
         }
-        return null;
+        return false;
     }
 
     /**
@@ -131,7 +131,7 @@ export default class OpString {
      *      inserted.
      * @param {Array<string|number>} [values] - An array with the characters or character codes of
      *      the values corresponding to the operation to be inserted.
-     * @returns {number|null} - The id of the inserted operation or `null` if the operation
+     * @returns {number|boolean} - The id of the inserted operation or `false` if the operation
      *      wasn't inserted.
      */
     insert(index, operation, values) {
@@ -149,7 +149,7 @@ export default class OpString {
         } catch (error) {
             this.#logError(error);
         }
-        return null;
+        return false;
     }
 
     /**
@@ -161,7 +161,7 @@ export default class OpString {
      *      prepended.
      * @param {Array<string|number>} [values] - An array with the characters or character codes of
      *      the values corresponding to the operation to be prepended.
-     * @returns {number|null} - The id of the prepended operation or `null` if the operation
+     * @returns {number|boolean} - The id of the prepended operation or `false` if the operation
      *      wasn't prepended.
      */
     prepend(operation, values) {
@@ -179,7 +179,7 @@ export default class OpString {
         } catch (error) {
             this.#logError(error);
         }
-        return null;
+        return false;
     }
 
     /**
