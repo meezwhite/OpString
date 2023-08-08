@@ -217,7 +217,7 @@ export default class OpString {
      * 
      * @throws {ReferenceError} - If there is no operation with the specified id.
      * 
-     * @returns {number|null} - Index of the operation in the sequence, or `null` if not found.
+     * @returns {number|undefined} - Index of the operation in the sequence, or `undefined` if not found.
      */
     index(id) {
         try {
@@ -231,7 +231,7 @@ export default class OpString {
         } catch (error) {
             this.#logError(error);
         }
-        return null;
+        return undefined;
     }
 
     /**
