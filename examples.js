@@ -128,13 +128,28 @@ opString.execute();
 /**
  * Example 7
  */
-console.log('\n--- Example 7 (insert) ---\n');
+console.log('\n--- Example 7 (index) ---\n');
+
+// Get the index of operation with id 4 in the sequence
+const operationIndex = opString.index(4);
+console.log(`> index of operation with id 4 in the sequence: ${operationIndex}`);
+
+// Output:
+// > index of operation with id in the sequence: 1
+
+
+/**
+ * Example 8
+ */
+console.log('\n--- Example 8 (insert) ---\n');
 
 opString.registerOperation('G', (log) => {
     console.log(`> ${log}`);
 });
 opString.registerValue('g', 'Inserted operation at index 1');
-const insertedId = opString.insert(1, 'G', ['g']);
+if (operationIndex !== null) {
+    const insertedId = opString.insert(operationIndex, 'G', ['g']);
+}
 opString.execute();
 
 // Output:
@@ -146,9 +161,9 @@ opString.execute();
 
 
 /**
- * Example 8
+ * Example 9
  */
-console.log('\n--- Example 8 (get sequence) ---\n');
+console.log('\n--- Example 9 (get sequence) ---\n');
 
 console.log('>', opString.getSequence(), `(Length: ${opString.getSequence().length})`);
 
@@ -157,9 +172,9 @@ console.log('>', opString.getSequence(), `(Length: ${opString.getSequence().leng
 
 
 /**
- * Example 9
+ * Example 10
  */
-console.log('\n--- Example 9 (maxSequenceLength) ---\n');
+console.log('\n--- Example 10 (maxSequenceLength) ---\n');
 
 opString.setMaxSequenceLength(20);
 opString.execute();
@@ -174,9 +189,9 @@ opString.execute();
 
 
 /**
- * Example 10
+ * Example 11
  */
-console.log('\n--- Example 10 (ignoreWarnings) ---\n');
+console.log('\n--- Example 11 (ignoreWarnings) ---\n');
 
 const opString2 = new OpString({
     sequence: 'BabccBabccBabccBabccBabcc',
@@ -198,9 +213,9 @@ opString2.execute();
 
 
 /**
- * Example 11
+ * Example 12
  */
-console.log('\n--- Example 11 (strictMode) ---\n');
+console.log('\n--- Example 12 (strictMode) ---\n');
 
 const opString3 = new OpString({
     sequence: 'BabccBabccBabccBabccBabcc',
