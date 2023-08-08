@@ -418,7 +418,7 @@ opString.setSequence('AaabBabcc');
  * Handling an unknown value character
  *
  * Suppose the sequence is 'Ba?c'. The '?' represents an unknown value character.
- * In this case, the unknown character will be registered with a value of null.
+ * In this case, the unknown character will be registered with a value of `null`.
  * By registering it this way, the associated operation can still be executed.
  */
 opString.setSequence('Ba?c');
