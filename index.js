@@ -204,6 +204,30 @@ export default class OpString {
     }
 
     /**
+     * Returns the index of the operation with the provided id in the sequence.
+     * 
+     * @param {number} id - The id of the operation in the sequence for which the index should be returned.
+     * 
+     * @throws {ReferenceError} - If there is no operation with the specified id.
+     * 
+     * @returns {number|null} - Index of the operation in the sequence, or `null` if not found.
+     */
+    index(id) {
+        try {
+            this.#validateArguments('index', arguments);
+            const index = this.#sequenceData.findIndex(operation => operation.id === id);
+            if (index !== -1) {
+                return index;
+            } else {
+                throw new ReferenceError(`Cannot find index of operation with id ${id}, since not found.`);
+            }
+        } catch (error) {
+            this.#logError(error);
+        }
+        return null;
+    }
+
+    /**
      * Computes the character code of the provided value.
      * 
      * @private
@@ -796,7 +820,7 @@ export default class OpString {
      *      - `constructor`: If the `config` parameter is empty, not a plain object or doesn't have valid keys, or if the config object properties are of an invalid type.
      *      - `insert`: If the `index` parameter is not a non-negative integer.
      *      - `append`, `insert` and `prepend`: If the `values` parameter is not an array or an empty array.
-     *      - `remove`: If the `id` parameter is not a positive safe integer.
+     *      - `remove`, `index`: If the `id` parameter is not a positive safe integer.
      *      - `append`, `insert`, `prepend`, `registerOperation` and `registerValue`: If the `symbol` parameter is not a string or an integer.
      *      - `registerOperation`: If the `callback` parameter is not a function.
      *      - `registerOperations`: If the `operations` parameter is empty or not a plain object.
@@ -888,6 +912,12 @@ export default class OpString {
             case 'remove':
                 if (! this.#isPositiveSafeInteger(args[0])) {
                     throw new TypeError(`Cannot remove operation with id '${args[0]}'. The id must be a positive safe integer.`);
+                }
+                break;
+
+            case 'index':
+                if (! this.#isPositiveSafeInteger(args[0])) {
+                    throw new TypeError(`Cannot find index for operation with id '${args[0]}'. The id must be a positive safe integer.`);
                 }
                 break;
 
