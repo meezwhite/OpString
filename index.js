@@ -12,6 +12,7 @@ export default class OpString {
     #sequenceData = [];
     #operations = {};
     #values = {};
+    #labels = {};
     #maxSequenceLength;
     #ignoreWarnings = false;
     #strictMode = false;
@@ -29,6 +30,7 @@ export default class OpString {
         'sequence',
         'operations',
         'values',
+        'labels',
         'maxSequenceLength',
         'ignoreWarnings',
         'strictMode',
@@ -45,6 +47,8 @@ export default class OpString {
      * @param {Object} [config.operations] - Object containing the operation mappings to be
      *      registered. (default: {})
      * @param {Object} [config.values] - Object containing the value mappings to be
+     *      registered. (default: {})
+     * @param {Object} [config.labels] - Object containing the label mappings to be
      *      registered. (default: {})
      * @param {number} [config.maxSequenceLength] - Specifies a maximum allowed sequence length.
      *      If defined, it must be a positive safe integer. (default: undefined)
@@ -73,6 +77,9 @@ export default class OpString {
                 }
                 if (typeof config.values !== 'undefined') {
                     this.#registerValuesInternal(config.values);
+                }
+                if (typeof config.labels !== 'undefined') {
+                    this.#registerLabelsInternal(config.labels);
                 }
                 if (typeof config.sequence !== 'undefined') {
                     this.setSequence(config.sequence);
@@ -566,6 +573,127 @@ export default class OpString {
     }
 
     /**
+     * Registers a label mapping to represent the provided symbol.
+     * 
+     * @method registerLabel
+     * 
+     * @param {string} label - The label to represent the provided symbol.
+     * @param {string|number} symbol - The character or character code to be mapped to the label.
+     */
+    registerLabel(label, symbol) {
+        try {
+            this.#validateArguments('registerLabel', arguments);
+            const symbolType = this.#getSymbolType(symbol);
+            if (symbolType === this.#symbolTypeString) {
+                this.#labels[label] = symbol.charCodeAt(0);
+            } else if (symbolType === this.#symbolTypeInteger) {
+                this.#labels[label] = symbol;
+            }
+        } catch (error) {
+            this.#logError(error);
+        }
+    }
+
+    /**
+     * Registers additional label mappings provided by the `labels` object.
+     * 
+     * @method registerLabels
+     * 
+     * @param {Object} labels - Object containing additional label mappings to be registered.
+     */
+    registerLabels(labels) {
+        try {
+            this.#validateArguments('registerLabels', arguments);
+            this.#registerLabelsInternal(labels);
+        } catch (error) {
+            this.#logError(error);
+        }
+    }
+
+    /**
+     * Registers additional label mappings provided by the `labels` object without re-validating
+     * the `labels` object.
+     * 
+     * @private
+     * @method registerLabels
+     * 
+     * @param {Object} labels - Object containing the label mappings to be registered.
+     */
+    #registerLabelsInternal(labels) {
+        for (const [label, symbol] of Object.entries(labels)) {
+            this.registerLabel(label, symbol);
+        }
+    }
+
+    /**
+     * Registers the label mappings provided by the `labels` object. Previously registered
+     * label mappings will be deleted.
+     * 
+     * @method setLabels
+     * 
+     * @param {Object} labels - Object containing new labels mappings to be registered.
+     */
+    setLabels(labels) {
+        try {
+            this.#validateArguments('setLabels', arguments);
+            this.#labels = {};
+            this.#registerLabelsInternal(labels);
+        } catch (error) {
+            this.#logError(error);
+        }
+    }
+
+    /**
+     * Returns the registered labels.
+     * 
+     * @method getLabels
+     * 
+     * @returns {Object} - The registered labels
+     */
+    getLabels() {
+        return this.#labels;
+    }
+
+    /**
+     * Returns the corresponding character for the provided label, if the label is registered.
+     * 
+     * @param {string} label - The label for which a coresponding character should be returned.
+     * @returns {string|undefined} - If the label is registered, the corresponding character
+     *      is returned; otherwise `undefined`.
+     */
+    getCharForLabel(label) {
+        try {
+            this.#validateArguments('getCharForLabel', arguments);
+            const charCode = this.getCharCodeForLabel(label);
+            if (charCode !== undefined) {
+                return String.fromCharCode(charCode);
+            }
+        } catch (error) {
+            this.#logError(error);
+        }
+        return undefined;
+    }
+
+    /**
+     * Returns the corresponding character code for the provided label, if the label is registered.
+     * 
+     * @param {string} label - The label for which a coresponding character code should be returned.
+     * @returns {number|undefined} - If the label is registered, the corresponding character code
+     *      is returned; otherwise `undefined`.
+     */
+    getCharCodeForLabel(label) {
+        try {
+            this.#validateArguments('getCharCodeForLabel', arguments);
+            if (this.#labels[label] !== undefined) {
+                return this.#labels[label];
+            }
+        } catch (error) {
+            this.#logError(error);
+        }
+        return undefined;
+    }
+
+    /**
      * Sets the maximum allowed sequence limit.
      * 
      * @method setMaxSequenceLength
@@ -821,22 +949,25 @@ export default class OpString {
      *      - `insert`: If the `index` parameter is not a non-negative integer.
      *      - `append`, `insert` and `prepend`: If the `values` parameter is not an array or an empty array.
      *      - `remove`, `index`: If the `id` parameter is not a positive safe integer.
-     *      - `append`, `insert`, `prepend`, `registerOperation` and `registerValue`: If the `symbol` parameter is not a string or an integer.
+     *      - `append`, `insert`, `prepend`, `registerOperation`, `registerValue` and `registerLabel`: If the `symbol` parameter is not a string or an integer.
      *      - `registerOperation`: If the `callback` parameter is not a function.
-     *      - `registerOperations`: If the `operations` parameter is empty or not a plain object.
+     *      - `setOperations`and `registerOperations`: If the `operations` parameter is empty or not a plain object.
      *      - `registerValue`: If the `value` parameter is `undefined`.
-     *      - `registerValues`: If the `values` parameter is empty or not a plain object.
+     *      - `setValues` and `registerValues`: If the `values` parameter is empty or not a plain object.
+     *      - `registerLabel`: If the `label` parameter is not a string.
+     *      - `setLabels` and `registerLabels`: If the `labels` parameter is empty or not a plain object.
      *      - `getCharForValue` and `getCharCodeForValue`: If the `value` parameter is `undefined`.
+     *      - `getCharForLabel` and `getCharCodeForLabel`: If the `label` parameter is `undefined`.
      *      - `setMaxSequenceLength`: If the `maxSequenceLength` parameter is not a positive safe integer.
      *      - `execute`: If the character sequence of the current instance or the `sequence` parameter is not a string.
      * 
      * @throws {SyntaxError} - If the arguments have syntax errors:
      *      - `append`, `insert` and `prepend`: If the `values` parameter contains invalid symbols.
-     *      - `append`, `insert`, `prepend`, `registerOperation` and `registerValue`: If the `symbol` parameter is a string but not a single character.
+     *      - `append`, `insert`, `prepend`, `registerOperation`, `registerValue` and `registerLabel`: If the `symbol` parameter is a string but not a single character.
      *      - `execute`: If the sequence to be executed is empty.
      * 
      * @throws {RangeError} - If the arguments are out of valid range:
-     *      - `append`, `insert`, `prepend`, `registerOperation` and `registerValue`: If the `symbol` parameter is an integer but out of range.
+     *      - `append`, `insert`, `prepend`, `registerOperation`, `registerValue` and `registerLabel`: If the `symbol` parameter is an integer but out of range.
      *      - `execute`: If the character sequence of the current instance or the `sequence` parameter exceeds the configured `maxSequenceLength`.
      */
     #validateArguments(method, args) {
@@ -866,6 +997,12 @@ export default class OpString {
                             && ! this.#isValidStoreObject(args[0].values)
                         ) {
                             throw new TypeError(`The 'config.values' property, if defined, must be a non-empty plain object`);
+                        }
+                        if (
+                            typeof args[0].labels !== 'undefined'
+                            && ! this.#isValidStoreObject(args[0].labels)
+                        ) {
+                            throw new TypeError(`The 'config.labels' property, if defined, must be a non-empty plain object`);
                         }
                         if (
                             typeof args[0].maxSequenceLength !== 'undefined'
@@ -926,25 +1063,32 @@ export default class OpString {
             case 'prepend':
             case 'registerOperation':
             case 'registerValue':
+            case 'registerLabel':
                 /**
                  * NOTE: For the 'insert' method, change the arguments order for easier validation.
                  * The new order of the arguments will be: operation, values, index.
                  */
                 if (method === 'insert') {
                     args = [args[1], args[2], args[0]];
+                } else if (method === 'registerLabel') {
+                    args = [args[1], args[0]];
                 }
                 const method_isOpSeqAction = ['append', 'insert', 'prepend'].includes(method);
                 const afterMethodString = method_isOpSeqAction ? ' operation' : '';
                 introMsg = `Cannot ${method}${afterMethodString} with symbol '${args[0]}'`;
                 /**
-                 * NOTE: Validate the first argument of the 'insert' method here, because from a
-                 * developer's perspective, it is considered the first argument, and if it is
-                 * invalid, it should be the first to throw an error.
+                 * NOTE: Validate the first argument of the 'insert' and 'registerLabel' methods,
+                 * because from a developer's perspective, it is considered the first argument,
+                 * and if it is invalid, it should be the first to throw an error.
                  */
                 if (method === 'insert') {
                     const index_isNumber = typeof args[2] === 'number';
                     if (! index_isNumber || (index_isNumber && args[2] < 0)) {
                         throw new TypeError(`${introMsg} at index '${args[2]}'. The index must be a non-negative integer.`);
+                    }
+                } else if (method === 'registerLabel') {
+                    if (typeof args[0] !== 'string') {
+                        throw new TypeError(`${introMsg}. The label must be a string.`);
                     }
                 }
                 const stringOrIntegerSymbolMsg = 'symbol must be a string or an integer.';
@@ -1003,11 +1147,14 @@ export default class OpString {
             case 'registerOperations':
             case 'setValues':
             case 'registerValues':
+            case 'registerLabels':
                 let registerParamName;
                 if (['setOperations', 'registerOperations'].includes(method)) {
                     registerParamName = 'operations';
                 } else if (['setValues', 'registerValues'].includes(method)) {
                     registerParamName = 'values';
+                } else if (['setLabels', 'registerLabels'].includes(method)) {
+                    registerParamName = 'labels';
                 }
                 if (! this.#isValidStoreObject(args[0])) {
                     throw new TypeError(`Cannot ${method}, since the '${registerParamName}' parameter must be a non-empty plain object.`);
@@ -1016,8 +1163,11 @@ export default class OpString {
 
             case 'getCharForValue':
             case 'getCharCodeForValue':
+            case 'getCharForLabel':
+            case 'getCharCodeForLabel':
+                const suffix = method.slice(-5);
                 if (args[0] === undefined) {
-                    throw new TypeError(`Cannot get character${method === 'getCharForValue' ? '' : ' code'} for undefined value.`);
+                    throw new TypeError(`Cannot get character${method === `getCharFor${suffix}` ? '' : ' code'} for undefined ${suffix.toLowerCase()}.`);
                 }
                 break;
 
