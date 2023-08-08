@@ -195,7 +195,7 @@ opString.execute();
 /**
  * Example 9
  */
-console.log('\n--- Example 9 (get sequence) ---\n');
+console.log('\n--- Example 9 (getSequence) ---\n');
 
 console.log('>', opString.getSequence(), `(Length: ${opString.getSequence().length})`);
 
