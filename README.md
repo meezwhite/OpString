@@ -399,7 +399,7 @@ const operationIndex = opString.index(3);
 
 #### Returns
 
-`number|null` - Index of the operation in the sequence, or `null` if not found.
+`number|undefined` - Index of the operation in the sequence, or `undefined` if not found.
 
 </br>
 </details>
