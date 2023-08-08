@@ -1,12 +1,12 @@
 /**!
  * OpString
  * 
- * @version 0.3.1
+ * @version 0.4.0
  * @license MIT
  * @copyright meezwhite
  */
 export default class OpString {
-    version = '0.3.1';
+    version = '0.4.0';
 
     #sequence = '';
     #sequenceData = [];
