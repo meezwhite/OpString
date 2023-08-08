@@ -78,7 +78,15 @@ const opString = new OpString({
         'A': (x, y, d) => { console.log(x, y, d); },
         'B': (x, y, w, h) => { console.log(x, y, w, h); },
     },
-    values: { 'a': 30, 'b': 20, 'c': 55 },
+    values: {
+        'a': 30,
+        'b': 20,
+        'c': 55,
+    },
+    labels: {
+        'circle': 'A',
+        'rect': 'B',
+    },
     maxSequenceLength: 10,
     ignoreWarnings: false, // (default: false)
     strictMode: true, // (default: false)
@@ -115,9 +123,18 @@ opString.registerValue('b', 20);
 opString.registerValue('c', 55);
 // Alternatives: `registerValues` and `setValues`
 
+// Register labels
+opString.registerLabel('circle', 'A');
+opString.registerLabel('twenty', 'b');
+// Alternatives: `registerLabels` and `setLabels`
+
 // Get symbols for values
 const char = opString.getCharForValue(55); // Returns: 'c'
 const charCode = opString.getCharCodeForValue(55); // Returns: 99
+
+// Get symbols for labels
+const labelChar = opString.getCharForLabel('circle'); // Returns: 'A'
+const labelCharCode = opString.getCharCodeForLabel('circle'); // Returns: 65
 
 // Compose the character sequence
 opString.append('A', ['a', 'a', 'b']);
@@ -732,6 +749,165 @@ const charCode = opString.getCharCodeForValue(55);
 #### Returns
 
 `number|undefined` - If the value is registered, the corresponding character code is returned; otherwise `undefined`.
+
+</br>
+</details>
+
+<details>
+<summary><code>registerLabel(label, symbol)</code></summary>
+<br>Registers a label mapping to represent the provided symbol.
+
+#### Examples
+
+```js
+// Register a label mapping
+opString.registerLabel('circle', 'A');
+
+// Register a label mapping using character code
+opString.registerLabel('circle', 65);
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `label` | `string` | The label to represent the provided symbol. |
+| `symbol` | `string|number` | The character or character code to be mapped to the label. |
+
+</br>
+</details>
+
+<details>
+<summary><code>registerLabels(labels)</code></summary>
+<br>Registers additional label mappings provided by the `labels` object.
+
+#### Examples
+
+```js
+// Register additional label mappings
+opString.registerLabels({
+    'circle': 'A',
+    'rect': 'B',
+    'ten': 'x',
+});
+
+// Alternatively, you can register additional label mappings using character codes
+opString.registerLabels({
+    'circle': 65,
+    'rect': 66,
+    'ten': 120,
+});
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `labels` | `Object` | Object containing additional label mappings to be registered. |
+
+</br>
+</details>
+
+<details>
+<summary><code>setLabels(labels)</code></summary>
+<br>Registers the label mappings provided by the `labels` object. Previously registered label mappings will be deleted.
+
+#### Examples
+
+```js
+// Set new label mappings
+opString.setLabels({
+    'circle': 'A',
+    'rect': 'B',
+    'ten': 'x',
+});
+
+// Alternatively, you can set new label mappings using character codes
+opString.setLabels({
+    'circle': 65,
+    'rect': 66,
+    'ten': 120,
+});
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `labels` | `Object` | Object containing new label mappings to be registered. |
+
+</br>
+</details>
+
+<details>
+<summary><code>getLabels()</code></summary>
+<br>Returns the registered labels.
+
+#### Examples
+
+```js
+// Get the registered labels
+const labels = opString.getLabels();
+
+// Example output:
+// { 'circle': 65, 'rect': 66, 'ten': 120 }
+```
+
+#### Returns
+
+`Object` - The registered labels.
+
+</br>
+</details>
+
+<details>
+<summary><code>getCharForLabel(label)</code></summary>
+<br>Returns the corresponding character for the provided label, if the label is registered.
+
+#### Examples
+
+```js
+// Get the corresponding character for the provided label
+const char = opString.getCharCodeForLabel('circle');
+
+// Example output: 'A'
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `label` | `string` | The label for which a coresponding character should be returned. |
+
+#### Returns
+
+`string|undefined` - If the label is registered, the corresponding character is returned; otherwise `undefined`.
+
+</br>
+</details>
+
+<details>
+<summary><code>getCharCodeForLabel(label)</code></summary>
+<br>Returns the corresponding character code for the provided label, if the label is registered.
+
+#### Examples
+
+```js
+// Get the corresponding charCode for the provided label
+const charCode = opString.getCharCodeForLabel('circle');
+
+// Example output: 65
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `label` | `string` | The label for which a coresponding character code should be returned. |
+
+#### Returns
+
+`number|undefined` - If the label is registered, the corresponding character code is returned; otherwise `undefined`.
 
 </br>
 </details>
