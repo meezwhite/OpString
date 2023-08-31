@@ -110,7 +110,7 @@ console.log(`nextId: ${opString.getNextId()}`);
 /**
  * Example 4
  */
-console.log('--- Example 4 (remove) ---');
+console.log('\n--- Example 4 (remove) ---\n');
 
 opString.remove(3);
 console.log(opString.getSequenceData());
