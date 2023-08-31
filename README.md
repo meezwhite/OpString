@@ -210,7 +210,7 @@ OpString exposes the following properties and methods:
 // Access the version of OpString
 console.log(opString.version);
 
-// Output: '0.4.0'
+// Output: '0.5.0'
 ```
 
 </br>
