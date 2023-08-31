@@ -17,7 +17,7 @@ export default class OpString {
     #ignoreWarnings = false;
     #strictMode = false;
 
-    #nextOperationId = 1;
+    #nextId = 1;
 
     #symbolTypeInvalid = 0;
     #symbolTypeString = 1;
@@ -91,6 +91,15 @@ export default class OpString {
     }
 
     /**
+     * Returns the id to be assigned to the next appended operation.
+     * 
+     * @returns {number} - The next operation id
+     */
+    getNextId() {
+        return this.#nextId;
+    }
+
+    /**
      * Appends an operation to the sequence and returns the id of the appended operation.
      * 
      * @method append
@@ -103,7 +112,7 @@ export default class OpString {
      *      wasn't appended.
      */
     append(operation, values) {
-        const operationId = this.#nextOperationId;
+        const operationId = this.#nextId;
         try {
             this.#validateArguments('append', arguments);
             this.#sequenceData.push({
@@ -111,7 +120,7 @@ export default class OpString {
                 operation: this.#computeCharCode(operation),
                 values: this.#computeCharCodes(values),
             });
-            this.#nextOperationId++;
+            this.#nextId++;
             this.#computeSequence();
             return operationId;
         } catch (error) {
@@ -135,7 +144,7 @@ export default class OpString {
      *      wasn't inserted.
      */
     insert(index, operation, values) {
-        const operationId = this.#nextOperationId;
+        const operationId = this.#nextId;
         try {
             this.#validateArguments('add', arguments);
             this.#sequenceData.splice(index, 0, {
@@ -143,7 +152,7 @@ export default class OpString {
                 operation: this.#computeCharCode(operation),
                 values: this.#computeCharCodes(values),
             });
-            this.#nextOperationId++;
+            this.#nextId++;
             this.#computeSequence();
             return operationId;
         } catch (error) {
@@ -165,7 +174,7 @@ export default class OpString {
      *      wasn't prepended.
      */
     prepend(operation, values) {
-        const operationId = this.#nextOperationId;
+        const operationId = this.#nextId;
         try {
             this.#validateArguments('prepend', arguments);
             this.#sequenceData.unshift({
@@ -173,7 +182,7 @@ export default class OpString {
                 operation: this.#computeCharCode(operation),
                 values: this.#computeCharCodes(values),
             });
-            this.#nextOperationId++;
+            this.#nextId++;
             this.#computeSequence();
             return operationId;
         } catch (error) {
@@ -332,7 +341,7 @@ export default class OpString {
                             }
                         }
                         this.#sequenceData.push({
-                            id: this.#nextOperationId++,
+                            id: this.#nextId++,
                             operation: operationCharCode,
                             values: args,
                         });
