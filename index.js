@@ -1096,7 +1096,7 @@ export default class OpString {
                         throw new TypeError(`${introMsg} at index '${args[2]}'. The index must be a non-negative integer.`);
                     }
                 } else if (method === 'registerLabel') {
-                    if (typeof args[0] !== 'string') {
+                    if (typeof args[1] !== 'string') {
                         throw new TypeError(`${introMsg}. The label must be a string.`);
                     }
                 }
