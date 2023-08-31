@@ -96,6 +96,7 @@ opString.execute();
 console.log('\n--- Example 3 (sequenceData) ---\n');
 
 console.log(opString.getSequenceData());
+console.log(`nextId: ${opString.getNextId()}`);
 
 // Output:
 // [
@@ -103,6 +104,7 @@ console.log(opString.getSequenceData());
 //     { id: 4, operation: 66, values: [ 97, 98, 99, 99 ] },
 //     { id: 5, operation: 67, values: [ 97, 100, 101, 98, 102, 100 ] }
 // ]
+// nextId: 6
 
 
 /**
