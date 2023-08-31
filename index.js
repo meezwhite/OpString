@@ -1074,8 +1074,10 @@ export default class OpString {
             case 'registerValue':
             case 'registerLabel':
                 /**
-                 * NOTE: For the 'insert' method, change the arguments order for easier validation.
-                 * The new order of the arguments will be: operation, values, index.
+                 * NOTE: For the methods 'insert' and 'registerLabel', change the arguments order
+                 * for easier validation. The new order of the arguments will be:
+                 * - insert: operation, values, index
+                 * - registerLabel: symbol, label
                  */
                 if (method === 'insert') {
                     args = [args[1], args[2], args[0]];
