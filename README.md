@@ -272,6 +272,26 @@ const opString = new OpString({
 </details>
 
 <details>
+<summary><code>getNextId()</code></summary>
+<br>Returns the id to be assigned to the next appended operation.
+
+#### Examples
+
+```js
+// Get the next operation id
+const nextId = opString.getNextId();
+
+// Example output: 3
+```
+
+#### Returns
+
+`number` - The next operation id
+
+</br>
+</details>
+
+<details>
 <summary><code>append(operation, values?)</code></summary>
 <br>Appends an operation to the sequence and returns the id of the appended operation.
 
